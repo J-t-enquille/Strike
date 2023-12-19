@@ -25,3 +25,4 @@
 > - **[Lorenzo]** : Connait Tkinter et Pytest
 > - **[Vladimir]** : Ne connait pas Tkinter et Pytest
 > - **[Gaston]** : Ne connait pas Tkinter et Pytest
+> - C'est Vladouh qui test
