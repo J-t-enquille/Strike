@@ -1,0 +1,11 @@
+### JETBRAIN ###
+.idea
+
+### Python ###
+
+venv
+*.py[cod]
+*.so
+.Python
+build/
+dist/
