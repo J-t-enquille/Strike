@@ -11,7 +11,7 @@
 
 > #### Languages
 > - Python-3.12
->   - **[Frontend]** : Tkinter
+>   - **[Frontend]** : Tkinter / customTkinter
 >   - **[Test]** : Pytest
 >   - **[IDE recommandé]** : PyCharm Community
 
