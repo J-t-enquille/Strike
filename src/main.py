@@ -1,5 +1,5 @@
-print("Hello World!")
+from src.gui.App import App
 
-
-def assertTrue():
-    return True
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
