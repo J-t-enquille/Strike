@@ -25,7 +25,6 @@
 > - **[Lorenzo]** : Connait Tkinter et Pytest
 > - **[Vladimir]** : Ne connait pas Tkinter et Pytest
 > - **[Gaston]** : Ne connait pas Tkinter et Pytest
-> - C'est Vladouh qui test
 
 > #### Good practices
 > - [Pytest](https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html)
