@@ -3,9 +3,13 @@ import json
 path_file = "data.json"
 
 class Parser:
-    def addPlayer(self, name):
+    def addPlayer(self, player):
         with open(path_file, 'w') as file:
-            json.dump(name, file)
+            obj = {
+                "name": player.name,
+                "id": player.id
+            }
+            json.dump(obj, file)
 
     def getPlayers(self):
         from Player import Player
@@ -19,8 +23,8 @@ class Parser:
     def playerExist(self, name):
         for player in self.getPlayers():
             if player.name == name:
-                return True
-        return False
+                return player.id
+        return None
 
     def lastIdPlayer(self):
         return self.getPlayers()[-1].id

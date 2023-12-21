@@ -1,8 +1,10 @@
 from Parser import Parser
+from Player import Player
 
 
 p = Parser()
-print(p.lastIdPlayer())
+player = Player("gast le s")
+
 
 def assertTrue():
     return True
