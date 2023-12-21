@@ -7,11 +7,20 @@ class Parser:
         with open(path_file, 'w') as file:
             json.dump(name, file)
 
-    def getPlayer(self):
+    def getPlayers(self):
+        from Player import Player
         tableOfPlayer = []
         with open(path_file, 'r') as file:
             jsonData = json.load(file)
             for jsonObj in jsonData:
-                Player(jsonObj[id])
-                tableOfPlayer.append()
+                tableOfPlayer.append(Player(jsonObj["name"] ,jsonObj["id"]));
+        return tableOfPlayer
 
+    def playerExist(self, name):
+        for player in self.getPlayers():
+            if player.name == name:
+                return True
+        return False
+
+    def lastIdPlayer(self):
+        return self.getPlayers()[-1].id

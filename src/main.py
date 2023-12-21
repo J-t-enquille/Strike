@@ -1,7 +1,8 @@
 from Parser import Parser
 
+
 p = Parser()
-p.addPlayer("Julie")
+print(p.lastIdPlayer())
 
 def assertTrue():
     return True
