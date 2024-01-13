@@ -1,11 +1,15 @@
 import csv
 
-path_file = "data.csv"
+path_file = "../src/data.csv"
 
 class Parser:
     player = []
+
+    def __init__(self, file_path=path_file):
+        self.file_path = file_path
+
     def addPlayer(self, name):
-        from Player import Player
+        from src.Player import Player
         self.getPlayers()
         if self.playerExist(name) is None:
             self.player.append(Player(name, self.lastIdPlayer()+1))
@@ -17,7 +21,7 @@ class Parser:
                     writer.writerow(p.to_dict())
 
     def getPlayers(self):
-        from Player import Player
+        from src.Player import Player
         self.player = []
         with open(path_file, 'r') as file:
             reader = csv.DictReader(file)

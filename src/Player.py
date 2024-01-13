@@ -1,4 +1,4 @@
-from Parser import Parser
+from src.Parser import Parser
 
 class Player:
     def __init__(self, name, id=None):
@@ -8,6 +8,10 @@ class Player:
 
     def get_name(self):
         return self.name
+
+
+    def get_id(self):
+        return self.id
 
     def to_dict(self):
         return {"name": self.name, "id": self.id}
