@@ -18,8 +18,10 @@ def test_incrementation_score():
     assert Score2.score[0] == (3,4)
     assert Score2.score[1] == (7,2)
     assert Score2.score[7] == None
+
     assert Score2.ajouterScore(11,1,7) == False
     assert Score2.ajouterScore(7, 14, 7) == False
+
 
 def test_affichage_score():
     Score3 = Score()
