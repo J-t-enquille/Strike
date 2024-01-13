@@ -10,6 +10,7 @@ class Score:
                 self.score[numeroLancer] = (lancer1, lancer2)
             else:
                 print(f"Lancer invalide : n°{numeroLancer}, score {lancer1+lancer2}")
+                return False
         elif numeroLancer == 9:
             if lancer1 == 10 or lancer1 + lancer2 == 10:  # Strike ou Spare
                 self.score[numeroLancer] = (lancer1, lancer2, lancer3)
@@ -17,6 +18,8 @@ class Score:
                 self.score[numeroLancer] = (lancer1, lancer2)
         else:
             print(f"Lancer invalide : n°{numeroLancer}")
+            return False
+
 
     def afficherLancer(self):
         print("\n--- Affichage des Lancer ---")
