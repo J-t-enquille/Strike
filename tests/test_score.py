@@ -27,7 +27,24 @@ def test_affichage_score():
     Score3 = Score()
     for i in range(10):
         Score3.ajouterScore(i)
+        assert Score3.score[i] == (0,0)
+    #Score3.afficherLancer()
+
+def test_affichage_score2(capsys):
+    Score3 = Score()
+    Score3.ajouterScore(0, 3, 4)
+    Score3.ajouterScore(1, 7, 2)
+    Score3.ajouterScore(3, 5, 5)
+
     Score3.afficherLancer()
+
+    captured = capsys.readouterr()
+
+    expected_output = "\n--- Affichage des Lancer ---\nLancer n°1 = (3, 4)\nLancer n°2 = (7, 2)\nLancer n°4 = (5, 5)\n"
+    assert captured.out == expected_output
+
+
+
 
 def test_calcul_lancer():
     Score4 = Score()
