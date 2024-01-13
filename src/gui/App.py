@@ -18,11 +18,6 @@ class App(ctk.CTk):
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        print(self.grid_size())
-
-        # Create sidebar
-        self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
 
         # load images with light and dark mode image
         assets_path = os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."), "assets")
@@ -35,18 +30,33 @@ class App(ctk.CTk):
                                            dark_image=Image.open(os.path.join(assets_path, "profiles_dark.png")),
                                            size=(26, 26))
 
-        # create navigation frame
-        self.navigation_frame = ctk.CTkFrame(self, corner_radius=0)
-        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
-        self.navigation_frame.grid_rowconfigure(4, weight=1)
+        # create sidebar frame
+        self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
+        self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
+        self.sidebar_frame.grid_rowconfigure(4, weight=1)
 
-        self.navigation_frame_label = ctk.CTkLabel(self.navigation_frame, text="  Strike",
-                                                   image=self.logo_image,
-                                                   compound="left",
-                                                   font=ctk.CTkFont(size=24, weight="bold"))
-        self.navigation_frame_label.grid(row=0, column=0, padx=48, pady=24)
+        # Global Logo frame containing logo / title / description => 1 row, 2 columns
+        self.sidebar_logo_frame = ctk.CTkFrame(self.sidebar_frame, corner_radius=0, fg_color="transparent")
+        self.sidebar_logo_frame.grid(row=0, column=0, sticky="ew", pady=24, padx=32)
 
-        self.home_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10,
+        self.sidebar_logo_frame_logo = ctk.CTkLabel(self.sidebar_logo_frame,
+                                                    image=self.logo_image,
+                                                    text="")
+        self.sidebar_logo_frame_logo.grid(row=0, column=0)
+
+        # Text beside logo => Frame with 1 column, 2 rows
+        self.sidebar_logo_text_frame = ctk.CTkFrame(self.sidebar_logo_frame, corner_radius=0, fg_color="transparent")
+        self.sidebar_logo_text_frame.grid(row=0, column=1, padx=(12, 0))
+
+        self.sidebar_logo_frame_label = ctk.CTkLabel(self.sidebar_logo_text_frame, text="Strike",
+                                                     font=ctk.CTkFont(size=24, weight="bold"))
+        self.sidebar_logo_frame_label.grid(row=0, column=0, sticky="w")
+        self.sidebar_logo_frame_description = ctk.CTkLabel(self.sidebar_logo_text_frame, text="Bowling scoring app",
+                                                           font=ctk.CTkFont(size=14))
+        self.sidebar_logo_frame_description.grid(row=1, column=0, sticky="w")
+
+        # Buttons used for "routes"
+        self.home_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40, border_spacing=10,
                                          text="Home",
                                          font=ctk.CTkFont(size=18),
                                          fg_color="transparent", text_color=("gray10", "gray90"),
@@ -54,7 +64,7 @@ class App(ctk.CTk):
                                          image=self.home_image, anchor="w", command=self.home_button_event)
         self.home_button.grid(row=1, column=0, sticky="ew")
 
-        self.profiles_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40,
+        self.profiles_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
                                              border_spacing=10, text="Profiles",
                                              font=ctk.CTkFont(size=18),
                                              fg_color="transparent", text_color=("gray10", "gray90"),
@@ -63,11 +73,12 @@ class App(ctk.CTk):
                                              command=self.profiles_button_event)
         self.profiles_button.grid(row=2, column=0, sticky="ew")
 
-        self.appearance_mode_menu = ctk.CTkOptionMenu(self.navigation_frame,
+        self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],
                                                       command=App.change_appearance_mode_event)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
+        # ========= Pages displayed from "routes" ===================
         # create home frame
         self.home_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.home_frame.grid_columnconfigure(0, weight=1)
