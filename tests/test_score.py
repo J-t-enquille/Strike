@@ -1,4 +1,5 @@
 from src.Score import Score
+import pytest
 
 def test_creation_score():
     Score1 = Score()
@@ -8,8 +9,14 @@ def test_incrementation_score():
     Score2.ajouterScore(0,3,4)
     Score2.ajouterScore(1, 7, 2)
     print("")
-    Score2.ajouterScore(11, 1, 7)
     Score2.ajouterScore(7, 14, 7)
+
+    assert Score2.score[0] == (3,4)
+    assert Score2.score[1] == (7,2)
+    assert Score2.score[7] == None
+
+    # Assert that the print statement contains the expected message
+    assert Score2.ajouterScore(11, 1, 7) == False
 
 def test_affichage_score():
     Score3 = Score()
