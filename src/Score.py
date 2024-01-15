@@ -36,6 +36,8 @@ class Score:
             return True
 
     def calculLancer(self, numeroLancer):
+        if self.score[numeroLancer] is None:
+            return 0
         if numeroLancer == 0:
             somme = self.score[numeroLancer][0] + self.score[numeroLancer][1]
             return somme
@@ -75,3 +77,6 @@ class Score:
         for i in range(10):
             sommeTotale = sommeTotale + self.calculLancer(i)
         return sommeTotale
+
+    def getScores(self):
+        return [score_tuple for score_tuple in self.score if score_tuple is not None]

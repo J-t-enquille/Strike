@@ -65,6 +65,8 @@ def test_calcul_lancer():
     assert(Score4.calculLancer(4) == 10)
     assert(Score4.calculLancer(5) == 18)
 
+    assert Score4.calculLancer(6) == 0
+
 def test_calcul_score():
     Score5 = Score()
     Score5.ajouterScore(0, 3, 4)
@@ -86,3 +88,14 @@ def test_calcul_score():
     assert(Score5.calculScoreCourant(4) == 48) #5 tours effectués
     assert(Score5.calculScoreCourant(7) == 96) #8 tours effectués
     assert(Score5.calculScoreCourant(9) == 125) #Tous les coups joués
+
+def test_get_scores():
+    score = Score()
+
+    score.ajouterScore(0, 4, 5)
+    score.ajouterScore(1, 2, 8)
+    score.ajouterScore(2, 10)
+
+    scores = score.getScores()
+
+    assert scores == [(4, 5), (2, 8), (10, 0)]
