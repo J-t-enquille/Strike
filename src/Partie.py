@@ -26,6 +26,7 @@ class Partie:
             player_scores = {
                 "player": player,
                 "scores": score.getScores(),
+                "tableau": score.tableauScore(),
                 "total_score": score.scoreTotal()
             }
             result.append(player_scores)
