@@ -1,7 +1,16 @@
 import os
 from PIL import Image
 import customtkinter as ctk
+import random
+from functools import partial
+def random_color():
+    red = random.randint(30, 225)
+    green = random.randint(30, 225)
+    blue = random.randint(30, 225)
 
+    color_hex = "#{:02X}{:02X}{:02X}".format(red, green, blue)
+
+    return color_hex
 
 
 class App(ctk.CTk):
@@ -127,10 +136,52 @@ class App(ctk.CTk):
         self.newgame_frame.grid_rowconfigure(0, weight=1)
         self.newgame_frame.grid_rowconfigure(2, weight=1)
 
-        self.newgame_frame_label = ctk.CTkLabel(self.newgame_frame, text="New Game",
-                                                 font=ctk.CTkFont(size=20, weight="bold"))
+        self.newgame_frame_label = ctk.CTkLabel(self.newgame_frame, text="Click on + button to add players",
+                                                font=ctk.CTkFont(size=20, weight="bold"))
         self.newgame_frame_label.grid(row=1, column=0, padx=20, pady=10)
 
+        self.new_game_frame_add_player_button = ctk.CTkButton(self.newgame_frame, corner_radius=10, height=50, text="+",
+                                                              command=self.addplayer_button_event)
+        self.new_game_frame_add_player_button.grid(row=2, column=0, padx=20, pady=10, sticky="n")
+
+        # create newplayer frame
+        self.newplayer_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.newplayer_frame.grid_columnconfigure(0, weight=1)
+        self.newplayer_frame.grid_rowconfigure(0, weight=1)
+        self.newplayer_frame.grid_rowconfigure(3, weight=1)
+
+        self.newplayer_frame_label = ctk.CTkLabel(self.newplayer_frame, text="Select players for the game",
+                                                  font=ctk.CTkFont(size=20, weight="bold"))
+        self.newplayer_frame_label.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+
+        self.player_list_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
+        self.player_list_frame.grid(row=2, column=0, padx=20, pady=10, sticky="n")
+
+        self.list_player = ["Vladimir", "Gaston", "Julie", "Lorenzo"]
+        self.player_button = {}
+        i = 0
+        row = 0
+        for player in self.list_player:
+            color = random_color()
+            self.player_button[player] = ctk.CTkButton(self.player_list_frame, text=player,
+                                                       font=ctk.CTkFont(size=20, weight="bold"), fg_color=color,
+                                                       corner_radius=10, command=partial(self.selectplayer, player))
+        for player in self.player_button:
+            self.player_button[player].grid(row=row, column=i, padx=5, pady=10)
+            i += 1
+            if i == 4:
+                i = 0
+                row += 1
+
+        self.newplayer_entry_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
+        self.newplayer_entry_frame.grid(row=3, column=0, padx=20, pady=10, sticky="n")
+        self.newplayer_entry = ctk.CTkEntry(self.newplayer_entry_frame, corner_radius=10, height=50, width=300)
+        self.newplayer_entry.grid(row=3, column=0, padx=20, pady=10, sticky="n")
+
+        self.newplayer_button = ctk.CTkButton(self.newplayer_entry_frame, corner_radius=10, height=50,
+                                              text="New player",
+                                              command=lambda: self.createplayer_button(self.newplayer_entry.get()))
+        self.newplayer_button.grid(row=3, column=1, padx=20, pady=10, sticky="n")
         # select default frame
         self.select_frame_by_name("home")
 
@@ -152,6 +203,10 @@ class App(ctk.CTk):
             self.newgame_frame.grid(row=0, column=1, sticky="nsew")
         else:
             self.newgame_frame.grid_forget()
+        if name == "addplayer":
+            self.newplayer_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.newplayer_frame.grid_forget()
     def home_button_event(self):
         self.select_frame_by_name("home")
 
@@ -160,6 +215,27 @@ class App(ctk.CTk):
 
     def newgame_button_event(self):
         self.select_frame_by_name("newgame")
+
+    def addplayer_button_event(self):
+        self.select_frame_by_name("addplayer")
+
+
+    def createplayer_button(self,playername):
+        self.list_player.append(playername)
+        self.player_button[playername] = ctk.CTkButton(self.player_list_frame, text=playername,font=ctk.CTkFont(size=20, weight="bold"),fg_color=random_color(),corner_radius=10, command=partial(self.selectplayer, playername))
+
+        for player in self.player_button:
+            self.player_button[player].grid_forget()
+        i = 0
+        row = 0
+        for player in self.player_button:
+            self.player_button[player].grid(row=row, column=i, padx=5, pady=10)
+            i += 1
+            if i == 4:
+                i = 0
+                row += 1
+    def selectplayer(self,playername):
+        print(playername)
 
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):
