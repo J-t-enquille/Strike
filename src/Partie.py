@@ -1,5 +1,6 @@
 from src.Score import Score
 
+
 class Partie:
     def __init__(self, players=None):
         self.scores = {}
