@@ -39,7 +39,7 @@ class App(ctk.CTk):
         self.profiles_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "profiles.png")),
                                            dark_image=Image.open(os.path.join(assets_path, "profiles_dark.png")),
                                            size=(26, 26))
-        self.newgame_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
+        self.play_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
                                            dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
                                            size=(26, 26))
         self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
@@ -89,14 +89,14 @@ class App(ctk.CTk):
                                              command=self.profiles_button_event)
         self.profiles_button.grid(row=2, column=0, sticky="ew")
 
-        self.newgame_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
-                                             border_spacing=10, text="New Game",
+        self.play_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
+                                             border_spacing=10, text="Play",
                                              font=ctk.CTkFont(size=18),
                                              fg_color="transparent", text_color=("gray10", "gray90"),
                                              hover_color=("gray70", "gray30"),
-                                             image=self.newgame_image, anchor="w",
-                                             command=self.newgame_button_event)
-        self.newgame_button.grid(row=3, column=0, sticky="ew")
+                                             image=self.play_image, anchor="w",
+                                             command=self.play_button_event)
+        self.play_button.grid(row=3, column=0, sticky="ew")
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],
@@ -130,18 +130,30 @@ class App(ctk.CTk):
                                                  font=ctk.CTkFont(size=20, weight="bold"))
         self.profiles_frame_label.grid(row=1, column=0, padx=20, pady=10)
 
-        # create newgame frame
-        self.newgame_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.newgame_frame.grid_columnconfigure(0, weight=1)
-        self.newgame_frame.grid_rowconfigure(0, weight=1)
-        self.newgame_frame.grid_rowconfigure(2, weight=1)
+        # create play frame
+        self.play_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.play_frame.grid_columnconfigure(0, weight=1)
+        self.play_frame.grid_rowconfigure(0, weight=1)
+        self.play_frame.grid(row=0, column=0, sticky="nsew")
+        class  SettingsGame:
+            def __init__(self, numberofbowlingpins, numberofrounds):
+                self.numberofbowlingpins = numberofbowlingpins
+                self.numberofrounds = numberofrounds
+                self.playersofthisgame = []
+        self.settings = SettingsGame(10,10)
+        self.settings_frame = ctk.CTkFrame(self.play_frame, corner_radius=0, fg_color="transparent")
+        self.settings_frame.grid(row=0, column=0, sticky="nsew")
+        self.settings_frame.grid_columnconfigure(0, weight=1)
+        self.settings_frame.grid_rowconfigure(0, weight=1)
+        self.settings_frame.grid_rowconfigure(3, weight=1)
 
-
-        self.newplayer_frame_label = ctk.CTkLabel(self.newgame_frame, text="Select players for the game",
+        self.newplayer_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
+        self.newplayer_frame.grid(row=0, column=0, padx=20, pady=10, sticky="s")
+        self.newplayer_frame_label = ctk.CTkLabel(self.newplayer_frame, text="Select players for the game",
                                                   font=ctk.CTkFont(size=20, weight="bold"))
-        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10,sticky= "s")
+        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10,sticky= "n")
 
-        self.player_list_frame = ctk.CTkFrame(self.newgame_frame, corner_radius=0, fg_color="transparent")
+        self.player_list_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
         self.player_list_frame.grid(row=1, column=0, padx=20, pady=10)
 
         self.list_player = ["Vladimir", "Gaston", "Julie", "Lorenzo"]
@@ -160,7 +172,7 @@ class App(ctk.CTk):
                 i = 0
                 row += 1
 
-        self.newplayer_entry_frame = ctk.CTkFrame(self.newgame_frame, corner_radius=0, fg_color="transparent")
+        self.newplayer_entry_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
         self.newplayer_entry_frame.grid(row=2, column=0, padx=20, pady=10, sticky="n")
         self.newplayer_entry = ctk.CTkEntry(self.newplayer_entry_frame, corner_radius=10, height=50, width=300)
         self.newplayer_entry.grid(row=0, column=0, padx=20, pady=10)
@@ -170,6 +182,31 @@ class App(ctk.CTk):
                                               command=lambda: self.createplayer_button(self.newplayer_entry.get()))
         self.newplayer_button.grid(row=0, column=1, padx=20, pady=10)
         self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
+
+        self.configgame_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
+        self.configgame_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.numberofbowlingpins_frame = ctk.CTkFrame(self.configgame_frame, corner_radius=0, fg_color="transparent")
+        self.numberofbowlingpins_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.numberofbowlingpins_frame_label = ctk.CTkLabel(self.numberofbowlingpins_frame, text="Number of bowling pins :",font=ctk.CTkFont(size=20, weight="bold"))
+        self.numberofbowlingpins_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
+        self.numberofbowlingpins_frame_entry = ctk.CTkEntry(self.numberofbowlingpins_frame, corner_radius=10, height=50, width=100,placeholder_text="10")
+        self.numberofbowlingpins_frame_entry.grid(row=0, column=1, padx=20, pady=10, sticky="n")
+        self.numberofrounds_frame = ctk.CTkFrame(self.configgame_frame, corner_radius=0, fg_color="transparent")
+        self.numberofrounds_frame.grid(row=1, column=2, padx=20, pady=10, sticky="n")
+        self.numberofrounds_frame_label = ctk.CTkLabel(self.numberofrounds_frame,
+                                                            text="Number of rounds :",
+                                                            font=ctk.CTkFont(size=20, weight="bold"))
+        self.numberofrounds_frame_label.grid(row=0, column=0, padx=20, pady=10)
+        self.numberofrounds_frame_entry = ctk.CTkEntry(self.numberofrounds_frame, corner_radius=10, height=50,
+                                                            width=100, placeholder_text="10")
+        self.numberofrounds_frame_entry.grid(row=0, column=1, padx=20, pady=10)
+
+        self.startgame_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
+        self.startgame_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ne")
+        self.startgame_button = ctk.CTkButton(self.startgame_frame, corner_radius=10, height=50, width=100,text="Start",font=ctk.CTkFont(size=20, weight="bold"),command=self.startgame, state="disabled")
+        self.startgame_button.grid(row=0, column=0, padx=20, pady=10)
+
+
         # select default frame
         self.select_frame_by_name("home")
 
@@ -177,7 +214,7 @@ class App(ctk.CTk):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.profiles_button.configure(fg_color=("gray75", "gray25") if name == "profiles" else "transparent")
-        self.newgame_button.configure(fg_color=("gray75","gray25") if name == "newgame" else "transparent")
+        self.play_button.configure(fg_color=("gray75","gray25") if name == "play" else "transparent")
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")
@@ -187,10 +224,10 @@ class App(ctk.CTk):
             self.profiles_frame.grid(row=0, column=1, sticky="nsew")
         else:
             self.profiles_frame.grid_forget()
-        if name == "newgame":
-            self.newgame_frame.grid(row=0, column=1, sticky="nsew")
+        if name == "play":
+            self.play_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.newgame_frame.grid_forget()
+            self.play_frame.grid_forget()
 
     def home_button_event(self):
         self.select_frame_by_name("home")
@@ -198,8 +235,8 @@ class App(ctk.CTk):
     def profiles_button_event(self):
         self.select_frame_by_name("profiles")
 
-    def newgame_button_event(self):
-        self.select_frame_by_name("newgame")
+    def play_button_event(self):
+        self.select_frame_by_name("play")
 
 
     def createplayer_button(self,playername):
@@ -230,8 +267,24 @@ class App(ctk.CTk):
         for player in self.player_button:
             if player == playername and self.player_button[player].cget("border_width") == 0:
                 self.player_button[player].configure(border_color="gray75", border_width=5)
+                self.settings.playersofthisgame.append(playername)
             elif player == playername and self.player_button[player].cget("border_width") == 5:
                 self.player_button[player].configure(border_width=0)
+                self.settings.playersofthisgame.remove(playername)
+        if len(self.settings.playersofthisgame) > 0:
+            self.startgame_button.configure(state="normal")
+        else:
+            self.startgame_button.configure(state="disabled")
+    def startgame(self):
+        if self.numberofbowlingpins_frame_entry.get() != "":
+            self.settings.numberofbowlingpins = int(self.numberofbowlingpins_frame_entry.get())
+        if self.numberofrounds_frame_entry.get() != "":
+            self.settings.numberofrounds = int(self.numberofrounds_frame_entry.get())
+        print(self.settings.numberofbowlingpins)
+        print(self.settings.numberofrounds)
+        print(self.settings.playersofthisgame)
+        self.settings_frame.grid_forget()
+
 
 
     @staticmethod
