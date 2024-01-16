@@ -1,15 +1,5 @@
-from src.Parser import Parser
+from src.gui.App import App
 
-
-p = Parser()
-p.addPlayer("Vladou")
-p.addPlayer("Julie")
-p.addPlayer("Gaston")
-p.addPlayer("Gaston")
-p.addPlayer("Lolo")
-for play in p.getPlayers():
-    print(play.name)
-
-print(p.lastIdPlayer())
-def assertTrue():
-    return True
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
