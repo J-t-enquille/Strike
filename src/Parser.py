@@ -2,6 +2,7 @@ import csv
 
 path_file = "../src/data.csv"
 
+
 class Parser:
     player = []
 
@@ -12,13 +13,15 @@ class Parser:
         from src.Player import Player
         self.getPlayers()
         if self.playerExist(name) is None:
-            self.player.append(Player(name, self.lastIdPlayer()+1))
+            self.player.append(Player(name, self.lastIdPlayer() + 1))
             with open(path_file, 'w') as file:
                 fieldnames = ["name", "id"]
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 for p in self.player:
                     writer.writerow(p.to_dict())
+            return True
+        return False
 
     def getPlayers(self):
         from src.Player import Player
@@ -40,3 +43,11 @@ class Parser:
         if len(self.player) > 0:
             return self.player[-1].id
         return 0
+
+    def deleteAllPlayers(self):
+        try:
+            with open(self.file_path, 'w', newline='') as file:
+                file.truncate(0)  # Remove all content from the file
+                self.players = []  # Clear the players list
+        except Exception as e:
+            print(f"Error deleting all players: {e}")
