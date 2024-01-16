@@ -3,6 +3,9 @@ from PIL import Image
 import customtkinter as ctk
 import random
 from functools import partial
+from src.gui.components.Profiles import Profiles
+
+
 def random_color():
     red = random.randint(30, 225)
     green = random.randint(30, 225)
@@ -121,14 +124,7 @@ class App(ctk.CTk):
         self.home_frame_bowling_image.grid(row=2, column=0, padx=20, pady=10)
 
         # create profiles frame
-        self.profiles_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.profiles_frame.grid_columnconfigure(0, weight=1)
-        self.profiles_frame.grid_rowconfigure(0, weight=1)
-        self.profiles_frame.grid_rowconfigure(2, weight=1)
-
-        self.profiles_frame_label = ctk.CTkLabel(self.profiles_frame, text="Profiles",
-                                                 font=ctk.CTkFont(size=20, weight="bold"))
-        self.profiles_frame_label.grid(row=1, column=0, padx=20, pady=10)
+        self.profiles_frame = Profiles(self)
 
         # create newgame frame
         self.newgame_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -139,7 +135,7 @@ class App(ctk.CTk):
 
         self.newplayer_frame_label = ctk.CTkLabel(self.newgame_frame, text="Select players for the game",
                                                   font=ctk.CTkFont(size=20, weight="bold"))
-        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10,sticky= "s")
+        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="s")
 
         self.player_list_frame = ctk.CTkFrame(self.newgame_frame, corner_radius=0, fg_color="transparent")
         self.player_list_frame.grid(row=1, column=0, padx=20, pady=10)
