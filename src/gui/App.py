@@ -3,6 +3,7 @@ from PIL import Image
 import customtkinter as ctk
 
 
+
 class App(ctk.CTk):
     def __init__(self):
         ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -32,6 +33,9 @@ class App(ctk.CTk):
         self.newgame_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
                                            dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
                                            size=(26, 26))
+        self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
+                                               dark_image=Image.open(os.path.join(assets_path, "home_img_dark.png")),
+                                               size=(400, 400))
 
         # create sidebar frame
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
@@ -97,8 +101,15 @@ class App(ctk.CTk):
         self.home_frame.grid_rowconfigure(0, weight=1)
         self.home_frame.grid_rowconfigure(2, weight=1)
 
-        self.home_frame_label = ctk.CTkLabel(self.home_frame, text="Home", font=ctk.CTkFont(size=20, weight="bold"))
+        self.home_frame_label = ctk.CTkLabel(self.home_frame, text="Welcome,\n start a new game to begin. ",
+                                             font=ctk.CTkFont(size=20, weight="bold"))
         self.home_frame_label.grid(row=1, column=0, padx=20, pady=10)
+
+        self.home_frame_label.grid(row=1, column=0, padx=20, pady=10)
+        self.home_frame_bowling_image = ctk.CTkLabel(self.home_frame,
+                                                     image=self.home_bowling_image,
+                                                     text="")
+        self.home_frame_bowling_image.grid(row=2, column=0, padx=20, pady=10)
 
         # create profiles frame
         self.profiles_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
