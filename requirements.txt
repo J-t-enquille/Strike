@@ -1,4 +1,3 @@
 pytest
 customtkinter
-csv
 Pillow
