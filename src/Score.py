@@ -86,11 +86,6 @@ class Score:
 
             return score
 
-# TODO
-    # Modifier calculScoreCourant (tableau ?) afin de l'adapter à calculScoreLancer
-    # Modifier scoreTotal " "
-    # Modifier la fonction tableauScore afin de permettre un return du tableau des scores courant
-
     def scoreTotal(self):
         scoreTotal = 0
         for i in range(self.nombreTour):
