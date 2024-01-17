@@ -3,7 +3,11 @@ from PIL import Image
 import customtkinter as ctk
 import random
 from functools import partial
+<<<<<<< HEAD
 
+=======
+from src.gui.components.Profiles import Profiles
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
 
 def random_color():
     red = random.randint(30, 225)
@@ -87,6 +91,7 @@ class App(ctk.CTk):
 
         # load images with light and dark mode image
         assets_path = os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."), "assets")
+        # Icons and images ----------------------------------------------------------------
         self.logo_image = ctk.CTkImage(Image.open(os.path.join(assets_path, "logo.jpeg")),
                                        size=(64, 64))
         self.home_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home.png")),
@@ -95,13 +100,19 @@ class App(ctk.CTk):
         self.profiles_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "profiles.png")),
                                            dark_image=Image.open(os.path.join(assets_path, "profiles_dark.png")),
                                            size=(26, 26))
+<<<<<<< HEAD
         self.play_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
                                        dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
                                        size=(26, 26))
+=======
+        self.newgame_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
+                                          dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
+                                          size=(26, 26))
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
         self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
                                                dark_image=Image.open(os.path.join(assets_path, "home_img_dark.png")),
                                                size=(400, 400))
-
+        # ---------------------------------------------------------------------------------
         # create sidebar frame
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
@@ -145,6 +156,7 @@ class App(ctk.CTk):
                                              command=self.profiles_button_event)
         self.profiles_button.grid(row=2, column=0, sticky="ew")
 
+<<<<<<< HEAD
         self.play_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
                                          border_spacing=10, text="Play",
                                          font=ctk.CTkFont(size=18),
@@ -153,6 +165,16 @@ class App(ctk.CTk):
                                          image=self.play_image, anchor="w",
                                          command=self.play_button_event)
         self.play_button.grid(row=3, column=0, sticky="ew")
+=======
+        self.newgame_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
+                                            border_spacing=10, text="New Game",
+                                            font=ctk.CTkFont(size=18),
+                                            fg_color="transparent", text_color=("gray10", "gray90"),
+                                            hover_color=("gray70", "gray30"),
+                                            image=self.newgame_image, anchor="w",
+                                            command=self.newgame_button_event)
+        self.newgame_button.grid(row=3, column=0, sticky="ew")
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],
@@ -177,14 +199,7 @@ class App(ctk.CTk):
         self.home_frame_bowling_image.grid(row=2, column=0, padx=20, pady=10)
 
         # create profiles frame
-        self.profiles_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.profiles_frame.grid_columnconfigure(0, weight=1)
-        self.profiles_frame.grid_rowconfigure(0, weight=1)
-        self.profiles_frame.grid_rowconfigure(2, weight=1)
-
-        self.profiles_frame_label = ctk.CTkLabel(self.profiles_frame, text="Profiles",
-                                                 font=ctk.CTkFont(size=20, weight="bold"))
-        self.profiles_frame_label.grid(row=1, column=0, padx=20, pady=10)
+        self.profiles_frame = Profiles(self)
 
         # create play frame
         self.play_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -192,6 +207,7 @@ class App(ctk.CTk):
         self.play_frame.grid_rowconfigure(0, weight=1)
         self.play_frame.grid(row=0, column=0, sticky="nsew")
 
+<<<<<<< HEAD
         class SettingsGame:
             def __init__(self, numberofbowlingpins, numberofrounds):
                 self.numberofbowlingpins = numberofbowlingpins
@@ -211,6 +227,11 @@ class App(ctk.CTk):
         self.newplayer_frame_label = ctk.CTkLabel(self.newplayer_frame, text="Select players for the game",
                                                   font=ctk.CTkFont(size=20, weight="bold"))
         self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
+=======
+        self.newplayer_frame_label = ctk.CTkLabel(self.newgame_frame, text="Select players for the game",
+                                                  font=ctk.CTkFont(size=20, weight="bold"))
+        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="s")
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
 
         self.player_list_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
         self.player_list_frame.grid(row=1, column=0, padx=20, pady=10)
@@ -242,6 +263,7 @@ class App(ctk.CTk):
         self.newplayer_button.grid(row=0, column=1, padx=20, pady=10)
         self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",
                                           font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
+<<<<<<< HEAD
 
         self.configgame_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
         self.configgame_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
@@ -301,6 +323,8 @@ class App(ctk.CTk):
                                                text="Validate", font=ctk.CTkFont(size=20, weight="bold"))
         self.enterscore_button.grid(row=0, column=1, padx=20, pady=10)
 
+=======
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
         # select default frame
         self.select_frame_by_name("home")
 
@@ -308,7 +332,11 @@ class App(ctk.CTk):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.profiles_button.configure(fg_color=("gray75", "gray25") if name == "profiles" else "transparent")
+<<<<<<< HEAD
         self.play_button.configure(fg_color=("gray75", "gray25") if name == "play" else "transparent")
+=======
+        self.newgame_button.configure(fg_color=("gray75", "gray25") if name == "newgame" else "transparent")
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")
@@ -372,6 +400,7 @@ class App(ctk.CTk):
         else:
             self.startgame_button.configure(state="disabled")
 
+<<<<<<< HEAD
     def startgame(self):
         if self.numberofbowlingpins_frame_entry.get() != "":
             self.settings.numberofbowlingpins = int(self.numberofbowlingpins_frame_entry.get())
@@ -415,6 +444,8 @@ class App(ctk.CTk):
         #    self.enterscore_entry.delete(0, "end")
         return 0
 
+=======
+>>>>>>> e9478d8eeae222fc9274c8be905ef1a2afdfa195
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
