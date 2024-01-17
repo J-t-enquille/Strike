@@ -5,7 +5,6 @@ import random
 from functools import partial
 from src.gui.components.Profiles import Profiles
 
-
 def random_color():
     red = random.randint(30, 225)
     green = random.randint(30, 225)
@@ -34,6 +33,7 @@ class App(ctk.CTk):
 
         # load images with light and dark mode image
         assets_path = os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."), "assets")
+        # Icons and images ----------------------------------------------------------------
         self.logo_image = ctk.CTkImage(Image.open(os.path.join(assets_path, "logo.jpeg")),
                                        size=(64, 64))
         self.home_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home.png")),
@@ -43,12 +43,12 @@ class App(ctk.CTk):
                                            dark_image=Image.open(os.path.join(assets_path, "profiles_dark.png")),
                                            size=(26, 26))
         self.newgame_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
-                                           dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
-                                           size=(26, 26))
+                                          dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
+                                          size=(26, 26))
         self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
                                                dark_image=Image.open(os.path.join(assets_path, "home_img_dark.png")),
                                                size=(400, 400))
-
+        # ---------------------------------------------------------------------------------
         # create sidebar frame
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
@@ -93,12 +93,12 @@ class App(ctk.CTk):
         self.profiles_button.grid(row=2, column=0, sticky="ew")
 
         self.newgame_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
-                                             border_spacing=10, text="New Game",
-                                             font=ctk.CTkFont(size=18),
-                                             fg_color="transparent", text_color=("gray10", "gray90"),
-                                             hover_color=("gray70", "gray30"),
-                                             image=self.newgame_image, anchor="w",
-                                             command=self.newgame_button_event)
+                                            border_spacing=10, text="New Game",
+                                            font=ctk.CTkFont(size=18),
+                                            fg_color="transparent", text_color=("gray10", "gray90"),
+                                            hover_color=("gray70", "gray30"),
+                                            image=self.newgame_image, anchor="w",
+                                            command=self.newgame_button_event)
         self.newgame_button.grid(row=3, column=0, sticky="ew")
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
@@ -132,7 +132,6 @@ class App(ctk.CTk):
         self.newgame_frame.grid_rowconfigure(0, weight=1)
         self.newgame_frame.grid_rowconfigure(2, weight=1)
 
-
         self.newplayer_frame_label = ctk.CTkLabel(self.newgame_frame, text="Select players for the game",
                                                   font=ctk.CTkFont(size=20, weight="bold"))
         self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="s")
@@ -165,7 +164,8 @@ class App(ctk.CTk):
                                               text="New player",
                                               command=lambda: self.createplayer_button(self.newplayer_entry.get()))
         self.newplayer_button.grid(row=0, column=1, padx=20, pady=10)
-        self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
+        self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",
+                                          font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
         # select default frame
         self.select_frame_by_name("home")
 
@@ -173,7 +173,7 @@ class App(ctk.CTk):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.profiles_button.configure(fg_color=("gray75", "gray25") if name == "profiles" else "transparent")
-        self.newgame_button.configure(fg_color=("gray75","gray25") if name == "newgame" else "transparent")
+        self.newgame_button.configure(fg_color=("gray75", "gray25") if name == "newgame" else "transparent")
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")
@@ -197,12 +197,14 @@ class App(ctk.CTk):
     def newgame_button_event(self):
         self.select_frame_by_name("newgame")
 
-
-    def createplayer_button(self,playername):
+    def createplayer_button(self, playername):
         if playername != "" and playername not in self.list_player:
             self.warning_label.grid_forget()
             self.list_player.append(playername)
-            self.player_button[playername] = ctk.CTkButton(self.player_list_frame, text=playername,font=ctk.CTkFont(size=20, weight="bold"),fg_color=random_color(),corner_radius=10, command=partial(self.selectplayer, playername))
+            self.player_button[playername] = ctk.CTkButton(self.player_list_frame, text=playername,
+                                                           font=ctk.CTkFont(size=20, weight="bold"),
+                                                           fg_color=random_color(), corner_radius=10,
+                                                           command=partial(self.selectplayer, playername))
 
             for player in self.player_button:
                 self.player_button[player].grid_forget()
@@ -221,14 +223,13 @@ class App(ctk.CTk):
             self.warning_label.configure(text="This name already exist")
             self.warning_label.grid(row=4, column=0, padx=20, pady=10, sticky="n")
 
-    def selectplayer(self,playername):
+    def selectplayer(self, playername):
         print(playername)
         for player in self.player_button:
             if player == playername and self.player_button[player].cget("border_width") == 0:
                 self.player_button[player].configure(border_color="gray75", border_width=5)
             elif player == playername and self.player_button[player].cget("border_width") == 5:
                 self.player_button[player].configure(border_width=0)
-
 
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):
