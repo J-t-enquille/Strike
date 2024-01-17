@@ -14,6 +14,15 @@ def test_lasted_id_player():
     assert parser.lastIdPlayer() == player.id
 
 
+def test_delete_player():
+    parser = Parser()
+    parser.deleteAllPlayers()
+    parser.addPlayer("Test")
+    assert len(parser.getPlayers()) == 1
+    assert parser.deletePlayer("Test") == True
+    assert len(parser.getPlayers()) == 0
+
+
 def test_delete_all_players():
     parser = Parser()
     parser.deleteAllPlayers()
