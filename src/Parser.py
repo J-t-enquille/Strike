@@ -10,6 +10,11 @@ class Parser:
         self.file_path = file_path
 
     def addPlayer(self, name):
+        """
+        Ajoute un joueur avec le nom donné au fichier CSV.
+        Vérifie d'abord si le joueur existe déjà. Si non, ajoute le joueur,
+        met à jour le fichier CSV et retourne True. Sinon, retourne False.
+        """
         from src.Player import Player
         self.getPlayers()
         if self.playerExist(name) is None:
@@ -51,3 +56,17 @@ class Parser:
                 self.players = []  # Clear the players list
         except Exception as e:
             print(f"Error deleting all players: {e}")
+
+    def deletePlayer(self, name):
+        self.getPlayers()
+        player_id = self.playerExist(name)
+        if player_id is not None:
+            self.player = [p for p in self.player if p.name != name]
+            with open(path_file, 'w') as file:
+                fieldnames = ["name", "id"]
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+                for p in self.player:
+                    writer.writerow(p.to_dict())
+            return True
+        return False
