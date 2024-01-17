@@ -54,28 +54,6 @@ def test_affichage_score2(capsys):
 
 
 
-def test_calculLancer():
-    score = Score()
-    score.ajouterScore(0, 3, 4)
-    score.ajouterScore(1, 8, 1)
-    score.ajouterScore(2, 8, 2)
-    score.ajouterScore(3, 5, 2)
-    score.ajouterScore(4, 10, 0)
-    score.ajouterScore(5, 7, 2)
-    print("")
-    score.afficherLancer()
-
-    # Tests asserts
-    assert score.calculLancer(0) == 7
-    assert score.calculLancer(1) == 9
-    assert score.calculLancer(2) == 10
-    assert score.calculLancer(3) == 12
-    assert score.calculLancer(4) == 10
-    assert score.calculLancer(5) == 18
-    assert score.calculLancer(6) == 0
-
-
-
 def test_calculScoreLancer():
     score = Score(3)
     score.ajouterScore(0, 3, 4)

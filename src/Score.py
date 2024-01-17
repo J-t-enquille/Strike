@@ -36,31 +36,6 @@ class Score:
         if self.score[numeroLancer][0] == self.nombreQuille:
             return True
 
-    def calculLancer(self, numeroLancer):
-        if self.score[numeroLancer] is None:
-            return 0
-
-        if numeroLancer == 0:
-            somme = self.score[numeroLancer][0] + self.score[numeroLancer][1]
-            return somme
-
-        if self.Strike(numeroLancer - 1):
-            somme = 2 * self.score[numeroLancer][0] + 2 * self.score[numeroLancer][1]
-            return somme
-
-        if self.Spare(numeroLancer - 1):
-            somme = 2 * self.score[numeroLancer][0] + self.score[numeroLancer][1]
-            return somme
-
-        if numeroLancer == self.nombreTour - 1:
-            if (self.score[numeroLancer][0] == self.nombreQuille
-                    or self.score[numeroLancer][0] + self.score[numeroLancer][1] == self.nombreQuille):
-                somme = self.score[numeroLancer][0] + self.score[numeroLancer][1] + self.score[numeroLancer][2]
-                return somme
-
-        somme = self.score[numeroLancer][0] + self.score[numeroLancer][1]
-        return somme
-
     def calculScoreLancer(self, numeroLancer):
         if self.score[numeroLancer] is None:
             return 0
