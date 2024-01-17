@@ -3,6 +3,8 @@ from PIL import Image
 import customtkinter as ctk
 import random
 from functools import partial
+
+
 def random_color():
     red = random.randint(30, 225)
     green = random.randint(30, 225)
@@ -11,6 +13,60 @@ def random_color():
     color_hex = "#{:02X}{:02X}{:02X}".format(red, green, blue)
 
     return color_hex
+
+
+class PlayerInfoWidgets:
+    def __init__(self, playername, rounds, scoretab_frame):
+        self.playerscore_frame = ctk.CTkFrame(scoretab_frame, corner_radius=0, fg_color="transparent")
+        self.playerscore_label = ctk.CTkLabel(self.playerscore_frame, text=playername,
+                                              font=ctk.CTkFont(size=20, weight="bold"))
+        self.playerscore_label.grid(row=0, column=0, padx=20, pady=10)
+        self.scorecase_frame_tab = []
+        for round in range(rounds):
+            self.scorecase_frame_tab.append(ScoreCaseFrame(round, rounds, self.playerscore_frame))
+            self.scorecase_frame_tab[round].scorecase_frame.grid(row=0, column=round + 1, padx=2, pady=5)
+            self.scorecase_frame_tab[round].scorecase_frame.grid_columnconfigure(0, weight=1)
+            self.scorecase_frame_tab[round].scorecase_frame.grid_rowconfigure(2, weight=1)
+            self.scorecase_frame_tab[round].trials_frame.grid(row=0, column=0)
+            self.scorecase_frame_tab[round].trials_frame.grid_columnconfigure(3, weight=1)
+            self.scorecase_frame_tab[round].trials_frame.grid_rowconfigure(1, weight=1)
+            self.scorecase_frame_tab[round].firsttrial_frame.grid(row=0, column=0)
+            self.scorecase_frame_tab[round].firsttrial_label.grid(row=0, column=0, padx=10)
+            self.scorecase_frame_tab[round].secondtrial_frame.grid(row=0, column=1)
+            self.scorecase_frame_tab[round].secondtrial_label.grid(row=0, column=0, padx=10)
+            if round == rounds - 1:
+                self.scorecase_frame_tab[round].thirdtrial_frame.grid(row=0, column=2)
+                self.scorecase_frame_tab[round].firsttrial_label.grid(row=0, column=0, padx=5)
+                self.scorecase_frame_tab[round].secondtrial_label.grid(row=0, column=0, padx=5)
+                self.scorecase_frame_tab[round].thirdtrial_label.grid(row=0, column=0, padx=5)
+            self.scorecase_frame_tab[round].sumscoretrial_frame.grid(row=1, column=0)
+            self.scorecase_frame_tab[round].sumscoretrial_label.grid(row=0, column=0, padx=20, pady=10)
+        self.totalscore_frame = ctk.CTkFrame(self.playerscore_frame, corner_radius=0, fg_color="transparent")
+        self.totalscore_frame.grid(row=0, column=rounds + 1, padx=20, pady=10)
+        self.totalscore_label = ctk.CTkLabel(self.totalscore_frame, text="0",
+                                             font=ctk.CTkFont(size=20, weight="bold"))
+        self.totalscore_label.grid(row=0, column=0, padx=20, pady=10)
+
+
+class ScoreCaseFrame:
+    def __init__(self, activeround, rounds, playerscore_frame):
+        self.scorecase_frame = ctk.CTkFrame(playerscore_frame, corner_radius=10)
+        self.trials_frame = ctk.CTkFrame(self.scorecase_frame, corner_radius=0, fg_color="transparent")
+        self.firsttrial_frame = ctk.CTkFrame(self.trials_frame, corner_radius=0, fg_color="transparent")
+        self.firsttrial_label = ctk.CTkLabel(self.firsttrial_frame, text="1",
+                                             font=ctk.CTkFont(size=20, weight="bold"))
+        self.secondtrial_frame = ctk.CTkFrame(self.trials_frame, corner_radius=0, fg_color="transparent",
+                                              border_width=2)
+        self.secondtrial_label = ctk.CTkLabel(self.secondtrial_frame, text="2",
+                                              font=ctk.CTkFont(size=20, weight="bold"))
+        if activeround == rounds - 1:
+            self.thirdtrial_frame = ctk.CTkFrame(self.trials_frame, corner_radius=0, fg_color="transparent",
+                                                 border_width=2)
+            self.thirdtrial_label = ctk.CTkLabel(self.thirdtrial_frame, text="3",
+                                                 font=ctk.CTkFont(size=20, weight="bold"))
+        self.sumscoretrial_frame = ctk.CTkFrame(self.scorecase_frame, corner_radius=0, fg_color="transparent")
+        self.sumscoretrial_label = ctk.CTkLabel(self.sumscoretrial_frame, text="3",
+                                                font=ctk.CTkFont(size=20, weight="bold"))
 
 
 class App(ctk.CTk):
@@ -40,8 +96,8 @@ class App(ctk.CTk):
                                            dark_image=Image.open(os.path.join(assets_path, "profiles_dark.png")),
                                            size=(26, 26))
         self.play_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "newgame.png")),
-                                           dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
-                                           size=(26, 26))
+                                       dark_image=Image.open(os.path.join(assets_path, "newgame_dark.png")),
+                                       size=(26, 26))
         self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
                                                dark_image=Image.open(os.path.join(assets_path, "home_img_dark.png")),
                                                size=(400, 400))
@@ -90,12 +146,12 @@ class App(ctk.CTk):
         self.profiles_button.grid(row=2, column=0, sticky="ew")
 
         self.play_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
-                                             border_spacing=10, text="Play",
-                                             font=ctk.CTkFont(size=18),
-                                             fg_color="transparent", text_color=("gray10", "gray90"),
-                                             hover_color=("gray70", "gray30"),
-                                             image=self.play_image, anchor="w",
-                                             command=self.play_button_event)
+                                         border_spacing=10, text="Play",
+                                         font=ctk.CTkFont(size=18),
+                                         fg_color="transparent", text_color=("gray10", "gray90"),
+                                         hover_color=("gray70", "gray30"),
+                                         image=self.play_image, anchor="w",
+                                         command=self.play_button_event)
         self.play_button.grid(row=3, column=0, sticky="ew")
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
@@ -135,12 +191,15 @@ class App(ctk.CTk):
         self.play_frame.grid_columnconfigure(0, weight=1)
         self.play_frame.grid_rowconfigure(0, weight=1)
         self.play_frame.grid(row=0, column=0, sticky="nsew")
-        class  SettingsGame:
+
+        class SettingsGame:
             def __init__(self, numberofbowlingpins, numberofrounds):
                 self.numberofbowlingpins = numberofbowlingpins
                 self.numberofrounds = numberofrounds
                 self.playersofthisgame = []
-        self.settings = SettingsGame(10,10)
+
+        self.settings = SettingsGame(10, 10)
+        # create settings frame of play frame
         self.settings_frame = ctk.CTkFrame(self.play_frame, corner_radius=0, fg_color="transparent")
         self.settings_frame.grid(row=0, column=0, sticky="nsew")
         self.settings_frame.grid_columnconfigure(0, weight=1)
@@ -151,7 +210,7 @@ class App(ctk.CTk):
         self.newplayer_frame.grid(row=0, column=0, padx=20, pady=10, sticky="s")
         self.newplayer_frame_label = ctk.CTkLabel(self.newplayer_frame, text="Select players for the game",
                                                   font=ctk.CTkFont(size=20, weight="bold"))
-        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10,sticky= "n")
+        self.newplayer_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
 
         self.player_list_frame = ctk.CTkFrame(self.newplayer_frame, corner_radius=0, fg_color="transparent")
         self.player_list_frame.grid(row=1, column=0, padx=20, pady=10)
@@ -181,31 +240,66 @@ class App(ctk.CTk):
                                               text="New player",
                                               command=lambda: self.createplayer_button(self.newplayer_entry.get()))
         self.newplayer_button.grid(row=0, column=1, padx=20, pady=10)
-        self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
+        self.warning_label = ctk.CTkLabel(self.newplayer_entry_frame, text="",
+                                          font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
 
         self.configgame_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
         self.configgame_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
         self.numberofbowlingpins_frame = ctk.CTkFrame(self.configgame_frame, corner_radius=0, fg_color="transparent")
         self.numberofbowlingpins_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
-        self.numberofbowlingpins_frame_label = ctk.CTkLabel(self.numberofbowlingpins_frame, text="Number of bowling pins :",font=ctk.CTkFont(size=20, weight="bold"))
+        self.numberofbowlingpins_frame_label = ctk.CTkLabel(self.numberofbowlingpins_frame,
+                                                            text="Number of bowling pins :",
+                                                            font=ctk.CTkFont(size=20, weight="bold"))
         self.numberofbowlingpins_frame_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
-        self.numberofbowlingpins_frame_entry = ctk.CTkEntry(self.numberofbowlingpins_frame, corner_radius=10, height=50, width=100,placeholder_text="10")
+        self.numberofbowlingpins_frame_entry = ctk.CTkEntry(self.numberofbowlingpins_frame, corner_radius=10, height=50,
+                                                            width=100, placeholder_text="10")
         self.numberofbowlingpins_frame_entry.grid(row=0, column=1, padx=20, pady=10, sticky="n")
         self.numberofrounds_frame = ctk.CTkFrame(self.configgame_frame, corner_radius=0, fg_color="transparent")
         self.numberofrounds_frame.grid(row=1, column=2, padx=20, pady=10, sticky="n")
         self.numberofrounds_frame_label = ctk.CTkLabel(self.numberofrounds_frame,
-                                                            text="Number of rounds :",
-                                                            font=ctk.CTkFont(size=20, weight="bold"))
+                                                       text="Number of rounds :",
+                                                       font=ctk.CTkFont(size=20, weight="bold"))
         self.numberofrounds_frame_label.grid(row=0, column=0, padx=20, pady=10)
         self.numberofrounds_frame_entry = ctk.CTkEntry(self.numberofrounds_frame, corner_radius=10, height=50,
-                                                            width=100, placeholder_text="10")
+                                                       width=100, placeholder_text="10")
         self.numberofrounds_frame_entry.grid(row=0, column=1, padx=20, pady=10)
 
         self.startgame_frame = ctk.CTkFrame(self.settings_frame, corner_radius=0, fg_color="transparent")
         self.startgame_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ne")
-        self.startgame_button = ctk.CTkButton(self.startgame_frame, corner_radius=10, height=50, width=100,text="Start",font=ctk.CTkFont(size=20, weight="bold"),command=self.startgame, state="disabled")
+        self.startgame_button = ctk.CTkButton(self.startgame_frame, corner_radius=10, height=50, width=100,
+                                              text="Start", font=ctk.CTkFont(size=20, weight="bold"),
+                                              command=self.startgame, state="disabled")
         self.startgame_button.grid(row=0, column=0, padx=20, pady=10)
 
+        # create playgame frame of play frame
+        self.activeplayer = 0
+        self.activeround = 1
+
+        self.playgame_frame = ctk.CTkFrame(self.play_frame, corner_radius=0, fg_color="transparent")
+        self.playgame_frame.grid_columnconfigure(0, weight=1)
+        self.playgame_frame.grid_rowconfigure(0, weight=1)
+        self.playgame_frame.grid_rowconfigure(2, weight=1)
+
+        self.scoretab_frame = ctk.CTkFrame(self.playgame_frame, corner_radius=0, fg_color="transparent")
+        self.scoretab_frame.grid(row=0, column=0, padx=20, pady=10)
+        self.scoretab_frame.grid_rowconfigure(0, weight=1)
+        self.scoretab_frame.grid_columnconfigure(1, weight=1)
+        self.headertab_frame = ctk.CTkFrame(self.scoretab_frame, corner_radius=0, fg_color="transparent")
+        self.headertab_frame.grid(row=0, column=0, padx=20, pady=10)
+        self.playerscore_widgets = {}
+
+        self.enterscore_frame = ctk.CTkFrame(self.playgame_frame, corner_radius=0, fg_color="transparent")
+        self.enterscore_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.enterscore_label = ctk.CTkLabel(self.enterscore_frame,
+                                             text="Enter score for ", font=ctk.CTkFont(size=20, weight="bold"))
+        self.enterscore_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
+        self.enterscore_entry_frame = ctk.CTkFrame(self.enterscore_frame, corner_radius=0, fg_color="transparent")
+        self.enterscore_entry_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.enterscore_entry = ctk.CTkEntry(self.enterscore_entry_frame, corner_radius=10)
+        self.enterscore_entry.grid(row=0, column=0, padx=20, pady=10)
+        self.enterscore_button = ctk.CTkButton(self.enterscore_entry_frame, corner_radius=10, width=100, height=50,
+                                               text="Validate", font=ctk.CTkFont(size=20, weight="bold"))
+        self.enterscore_button.grid(row=0, column=1, padx=20, pady=10)
 
         # select default frame
         self.select_frame_by_name("home")
@@ -214,7 +308,7 @@ class App(ctk.CTk):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.profiles_button.configure(fg_color=("gray75", "gray25") if name == "profiles" else "transparent")
-        self.play_button.configure(fg_color=("gray75","gray25") if name == "play" else "transparent")
+        self.play_button.configure(fg_color=("gray75", "gray25") if name == "play" else "transparent")
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")
@@ -238,12 +332,14 @@ class App(ctk.CTk):
     def play_button_event(self):
         self.select_frame_by_name("play")
 
-
-    def createplayer_button(self,playername):
+    def createplayer_button(self, playername):
         if playername != "" and playername not in self.list_player:
             self.warning_label.grid_forget()
             self.list_player.append(playername)
-            self.player_button[playername] = ctk.CTkButton(self.player_list_frame, text=playername,font=ctk.CTkFont(size=20, weight="bold"),fg_color=random_color(),corner_radius=10, command=partial(self.selectplayer, playername))
+            self.player_button[playername] = ctk.CTkButton(self.player_list_frame, text=playername,
+                                                           font=ctk.CTkFont(size=20, weight="bold"),
+                                                           fg_color=random_color(), corner_radius=10,
+                                                           command=partial(self.selectplayer, playername))
 
             for player in self.player_button:
                 self.player_button[player].grid_forget()
@@ -262,7 +358,7 @@ class App(ctk.CTk):
             self.warning_label.configure(text="This name already exist")
             self.warning_label.grid(row=4, column=0, padx=20, pady=10, sticky="n")
 
-    def selectplayer(self,playername):
+    def selectplayer(self, playername):
         print(playername)
         for player in self.player_button:
             if player == playername and self.player_button[player].cget("border_width") == 0:
@@ -275,6 +371,7 @@ class App(ctk.CTk):
             self.startgame_button.configure(state="normal")
         else:
             self.startgame_button.configure(state="disabled")
+
     def startgame(self):
         if self.numberofbowlingpins_frame_entry.get() != "":
             self.settings.numberofbowlingpins = int(self.numberofbowlingpins_frame_entry.get())
@@ -284,8 +381,39 @@ class App(ctk.CTk):
         print(self.settings.numberofrounds)
         print(self.settings.playersofthisgame)
         self.settings_frame.grid_forget()
+        self.playgame_frame.grid(row=0, column=0, sticky="ew")
+        self.editplaygameframe()
 
+    def editplaygameframe(self):
+        self.headertab_frame.grid_columnconfigure(self.settings.numberofrounds + 1, weight=1)
 
+        for rounds in range(self.settings.numberofrounds):
+            self.round_frame = ctk.CTkFrame(self.headertab_frame, corner_radius=0, fg_color="transparent", width=25,
+                                            border_width=1)
+            self.round_frame.grid(row=0, column=rounds + 1, pady=10)
+            self.round_label = ctk.CTkLabel(self.round_frame, text=str(rounds + 1),
+                                            font=ctk.CTkFont(size=20, weight="bold"))
+            self.round_label.grid(row=0, column=0, padx=20, pady=10)
+
+        for player in range(len(self.settings.playersofthisgame)):
+            self.playerscore_widgets[self.settings.playersofthisgame[player]] = PlayerInfoWidgets(
+                self.settings.playersofthisgame[player], self.settings.numberofrounds, self.scoretab_frame)
+
+            self.playerscore_widgets[self.settings.playersofthisgame[player]].playerscore_frame.grid(row=player + 1,
+                                                                                                     column=0, padx=20,
+                                                                                                     pady=10)
+            self.playerscore_widgets[self.settings.playersofthisgame[player]].playerscore_frame.grid_columnconfigure(
+                self.settings.numberofrounds + 2, weight=1)
+        self.enterscore_label.configure(text="Enter score for " + self.settings.playersofthisgame[self.activeplayer])
+
+    def enterscore(self):
+        # if self.enterscore_entry.get() != "":
+        #    self.totalscore_label.configure(text=self.enterscore_entry.get())
+        #    self.activeround += 1
+        #    self.enterscore_label.configure(
+        #        text="Enter score for " + self.settings.playersofthisgame[self.activeplayer])
+        #    self.enterscore_entry.delete(0, "end")
+        return 0
 
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):
