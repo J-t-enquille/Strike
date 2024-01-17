@@ -27,9 +27,9 @@ class PlayersFrame(ctk.CTkFrame):
 
 
 def random_color():
-    red = random.randint(30, 225)
-    green = random.randint(30, 225)
-    blue = random.randint(30, 225)
+    red = random.randint(30, 200)
+    green = random.randint(30, 200)
+    blue = random.randint(30, 200)
 
     color_hex = "#{:02X}{:02X}{:02X}".format(red, green, blue)
 
