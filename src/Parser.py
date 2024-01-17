@@ -53,7 +53,7 @@ class Parser:
         try:
             with open(self.file_path, 'w', newline='') as file:
                 file.truncate(0)  # Remove all content from the file
-                self.players = []  # Clear the players list
+                self.player = []  # Clear the players list
         except Exception as e:
             print(f"Error deleting all players: {e}")
 
