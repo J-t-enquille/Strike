@@ -29,12 +29,15 @@ class Score:
                 print(f"Lancer n°{i + 1} = {self.score[i]}")
 
     def Spare(self, numeroLancer):
-        if self.score[numeroLancer][0] + self.score[numeroLancer][1] == self.nombreQuille:
-            return True
+        if self.score[numeroLancer] is not None and len(self.score[numeroLancer]) > 0:
+            if self.score[numeroLancer][0] + self.score[numeroLancer][1] == self.nombreQuille:
+                return True
 
     def Strike(self, numeroLancer):
-        if self.score[numeroLancer][0] == self.nombreQuille:
-            return True
+        if self.score[numeroLancer] is not None and len(self.score[numeroLancer]) > 0:
+            if self.score[numeroLancer][0] == self.nombreQuille:
+                return True
+        return False
 
     def calculScoreLancer(self, numeroLancer):
         if self.score[numeroLancer] is None:
@@ -42,16 +45,20 @@ class Score:
 
         if self.Strike(numeroLancer):
             if numeroLancer+1 < self.nombreTour:
-                if self.Strike(numeroLancer+1):
-                    if numeroLancer + 2 < self.nombreTour:
-                        return 2 * self.nombreQuille + self.score[numeroLancer+2][0]
+                if self.score[numeroLancer + 1] is not None:
+                    if self.Strike(numeroLancer+1):
+                        if numeroLancer + 2 < self.nombreTour:
+                            return 2 * self.nombreQuille + self.score[numeroLancer+2][0]
+                        else:
+                            return self.nombreQuille + self.score[numeroLancer+1][0] + self.score[numeroLancer+1][1]
                     else:
                         return self.nombreQuille + self.score[numeroLancer+1][0] + self.score[numeroLancer+1][1]
-                else:
-                    return self.nombreQuille + self.score[numeroLancer+1][0] + self.score[numeroLancer+1][1]
+                return None
 
         elif self.Spare(numeroLancer) and numeroLancer + 1 < self.nombreTour:
-            return self.nombreQuille + self.score[numeroLancer+1][0]
+            if self.score[numeroLancer+1] is not None:
+                return self.nombreQuille + self.score[numeroLancer+1][0]
+            return None
 
         if numeroLancer < self.nombreTour:
             if numeroLancer == self.nombreTour - 1 and len(self.score[numeroLancer]) == 3:
@@ -64,7 +71,8 @@ class Score:
     def scoreTotal(self):
         scoreTotal = 0
         for i in range(self.nombreTour):
-            scoreTotal = scoreTotal + self.calculScoreLancer(i)
+            if self.calculScoreLancer(i) is not None:
+                scoreTotal = scoreTotal + self.calculScoreLancer(i)
         return scoreTotal
 
     def calculScoreCourant(self, numeroLancer):
@@ -75,12 +83,14 @@ class Score:
         return scoreCourant
 
     def tableauScoreCourant(self):
-        tableauScoreCourant = [0] * self.nombreTour
+        tableauScoreCourant = []
 
-        tableauScoreCourant[0] = self.calculScoreLancer(0)
+        if self.calculScoreLancer(0) is not None:
+            tableauScoreCourant.append(self.calculScoreLancer(0))
 
-        for i in range(1,self.nombreTour):
-            tableauScoreCourant[i] = tableauScoreCourant[i-1] + self.calculScoreLancer(i)
+        for i in range(1, self.nombreTour):
+            if self.score[i] is not None:
+                tableauScoreCourant.append(tableauScoreCourant[i - 1] + self.calculScoreLancer(i))
 
         return tableauScoreCourant
 
