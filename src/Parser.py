@@ -1,6 +1,7 @@
 import csv
+import os
 
-path_file = "../src/data.csv"
+path_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data.csv")
 
 
 class Parser:
