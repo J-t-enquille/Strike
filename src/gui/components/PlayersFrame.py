@@ -25,6 +25,9 @@ class PlayersFrame(ctk.CTkFrame):
                 i = 0
                 row += 1
 
+    def get_player_button(self, key):
+        return self.player_button[key]
+
 
 def random_color():
     red = random.randint(30, 200)

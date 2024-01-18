@@ -5,6 +5,7 @@ from functools import partial
 
 from PIL import Image
 
+from src.gui.components.FormInput import FormInput
 from src.gui.components.PlayersFrame import PlayersFrame
 
 
@@ -37,7 +38,7 @@ class Profiles(ctk.CTkFrame):
         # ----------------------------------------------------------------------
 
         self.profiles_label = ctk.CTkLabel(self, text="Players list",
-                                           font=ctk.CTkFont(size=38, weight="bold"))
+                                           font=ctk.CTkFont(size=34, weight="bold"))
         self.profiles_label.grid(row=1, column=0, padx=20, pady=10, sticky="new")
 
         self.players_list = ["Player 1", "Player 2", "Player 3", "Player 4"]
@@ -46,28 +47,22 @@ class Profiles(ctk.CTkFrame):
         self.players_frame.grid(row=player_frame_row, column=0, padx=20, pady=10)
 
         # Add player frame -----------------------------------------------------
-        self.add_player_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent", height=50)
-        self.add_player_frame.grid_columnconfigure(0, weight=2)
-        self.add_player_frame.grid_columnconfigure(1, weight=2)
-        self.add_player_frame.grid_columnconfigure(2, weight=0)
-        self.add_player_frame.grid_columnconfigure(3, weight=1)
-        self.add_player_frame.grid_columnconfigure(4, weight=0)
-        self.add_player_frame.grid_rowconfigure(0, weight=1)
-        self.add_player_frame.grid(row=4, column=0, sticky="sew")
+        self.bottom_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.bottom_frame.grid_columnconfigure(0, weight=1)
+        self.bottom_frame.grid_columnconfigure(1, weight=5)
+        self.bottom_frame.grid(row=4, column=0, sticky="sew")
 
-        self.add_player_input = ctk.CTkEntry(self.add_player_frame, corner_radius=10, height=50,
-                                             placeholder_text="Player name", font=ctk.CTkFont(size=18))
-        self.add_player_input.grid(row=0, column=1, sticky="ew", padx=10, pady=10)
-
-        self.add_player_btn = ctk.CTkButton(self.add_player_frame, corner_radius=10,
-                                            height=50,
-                                            font=ctk.CTkFont(size=18, weight="bold"),
-                                            text="New player",
-                                            command=lambda: self.create_player_button(self.add_player_input.get()))
-        self.add_player_btn.grid(row=0, column=2)
+        self.add_player_form = FormInput(self.bottom_frame,
+                                         onSubmit=self.create_player_button,
+                                         placeholder_text="Player name", btn_text="New player",
+                                         warning_callback=lambda playername: playername in self.players_list,
+                                         warning_text="This player already exist !",
+                                         allow_empty=False)
+        self.add_player_form.grid(row=0, column=1, padx=5, pady=5, sticky="sew")
 
         self.trash_btn_active = False
-        self.trash_btn = ctk.CTkButton(self.add_player_frame, corner_radius=10,
+
+        self.trash_btn = ctk.CTkButton(self.bottom_frame, corner_radius=10,
                                        border_spacing=10,
                                        width=40,
                                        text='',
@@ -76,23 +71,10 @@ class Profiles(ctk.CTkFrame):
                                        border_color=("grey50", "grey80"),
                                        image=self.trash_image,
                                        command=self.delete_player_button)
-        self.trash_btn.grid(row=0, column=4, padx=10, sticky="e")
-        # ----------------------------------------------------------------------
-
-        self.warning_label = ctk.CTkLabel(self, text="",
-                                          font=ctk.CTkFont(size=20, weight="bold", slant="italic"), text_color="red")
+        self.trash_btn.grid(row=0, column=2, padx=5, pady=5, sticky="es")
 
     # Create player button handler
     def create_player_button(self, playername):
-        if playername == "":
-            self.warning_label.configure(text="Please enter a name")
-            self.warning_label.grid(row=3, column=0, pady=10, sticky="sew")
-            return
-        if playername in self.players_list:
-            self.warning_label.configure(text="This name already exist")
-            self.warning_label.grid(row=3, column=0, pady=10, sticky="sew")
-            return
-        self.warning_label.grid_forget()
         self.players_frame.destroy()
         self.players_list.append(playername)
         self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.players_list)
