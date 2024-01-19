@@ -5,6 +5,7 @@ def test_add_player():
     parser = Parser()
     parser.addPlayer("Test")
     assert parser.playerExist("Test") is not None
+    assert parser.addPlayer("Test") is False
 
 
 def test_lasted_id_player():
