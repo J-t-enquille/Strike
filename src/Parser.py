@@ -5,10 +5,10 @@ path_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data.csv"
 
 
 class Parser:
-    player = []
 
     def __init__(self, file_path=path_file):
         self.file_path = file_path
+        self.player = []
 
     def addPlayer(self, name):
         """

@@ -7,6 +7,7 @@ from PIL import Image
 
 from src.gui.components.FormInput import FormInput
 from src.gui.components.PlayersFrame import PlayersFrame
+from src.Parser import Parser
 
 
 class ToplevelWindow(ctk.CTkToplevel):
@@ -41,9 +42,10 @@ class Profiles(ctk.CTkFrame):
                                            font=ctk.CTkFont(size=34, weight="bold"))
         self.profiles_label.grid(row=1, column=0, padx=20, pady=10, sticky="new")
 
-        self.players_list = ["Player 1", "Player 2", "Player 3", "Player 4"]
+        self.parser = Parser()
+        self.parser.getPlayers()
 
-        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.players_list)
+        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.parser.player)
         self.players_frame.grid(row=player_frame_row, column=0, padx=20, pady=10)
 
         # Add player frame -----------------------------------------------------
@@ -52,6 +54,9 @@ class Profiles(ctk.CTkFrame):
         self.bottom_frame.grid_columnconfigure(1, weight=5)
         self.bottom_frame.grid(row=4, column=0, sticky="sew")
 
+        self.players_list = []
+        for player in self.parser.player:
+            self.players_list.append(player.name)
         self.add_player_form = FormInput(self.bottom_frame,
                                          onSubmit=self.create_player_button,
                                          placeholder_text="Player name", btn_text="New player",
@@ -76,8 +81,8 @@ class Profiles(ctk.CTkFrame):
     # Create player button handler
     def create_player_button(self, playername):
         self.players_frame.destroy()
-        self.players_list.append(playername)
-        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.players_list)
+        self.parser.addPlayer(playername)
+        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.parser.player)
         self.players_frame.grid(row=player_frame_row, column=0, pady=10)
 
     # Trash button handler
@@ -92,6 +97,6 @@ class Profiles(ctk.CTkFrame):
             return
 
         self.players_frame.destroy()
-        self.players_list.remove(playername)
-        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.players_list)
+        self.parser.deletePlayer(playername)
+        self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.parser.player)
         self.players_frame.grid(row=player_frame_row, column=0, pady=10)

@@ -64,7 +64,7 @@ class FormInput(ctk.CTkFrame):
             self.warning_label.configure(text="Empty entry are not allowed !")
             self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
             return
-        if self.warning_callback(self.entry.get()):
+        if self.warning_callback is not None and self.warning_callback(self.entry.get()):
             self.warning_label.configure(text=self.warning_text)
             self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
             return
