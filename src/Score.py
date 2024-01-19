@@ -6,6 +6,12 @@ class Score:
         self.nombreQuille = nombreQuille
         self.score = [None] * nombreTour
 
+    def setNombreTour(self, nombreTour):
+        self.nombreTour = nombreTour
+
+    def setNombreQuille(self, nombreQuille):
+        self.nombreQuille = nombreQuille
+
     def ajouterScore(self, numeroTour, lancer1=0, lancer2=0, lancer3=0):
         if 0 <= numeroTour < self.nombreTour - 1:
             if lancer1 + lancer2 <= self.nombreQuille:
