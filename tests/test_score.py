@@ -105,6 +105,20 @@ def test_calculScoreLancer():
     assert score6.calculScoreLancer(1) == 18
     assert score6.calculScoreLancer(2) == 8
 
+    score7 = Score(3)
+    score7.ajouterScore(0,10)
+
+    assert score7.calculScoreLancer(0) is None
+
+    score8 = Score(3)
+    score8.ajouterScore(0,10)
+    score8.ajouterScore(1,10)
+    score8.ajouterScore(2,10,10,10)
+
+    assert score8.calculScoreLancer(0) == 30
+    assert score8.calculScoreLancer(1) == 30
+    assert score8.calculScoreLancer(2) == 30
+
 
 def test_score_total():
     score = Score()
@@ -135,6 +149,24 @@ def test_tableauScoreCourant():
 
     assert score.tableauScoreCourant() == [20, 38, 46, 65, 74]
     assert score.scoreTotal() == 74
+
+    score2 = Score(3)
+    score2.ajouterScore(0,10)
+    score2.ajouterScore(1, 10)
+    score2.ajouterScore(2, 10,10,10)
+
+    assert score2.tableauScoreCourant() == [30, 60, 90]
+
+    score3 = Score(3)
+    score3.ajouterScore(0,10)
+
+    assert score3.tableauScoreCourant() == []
+
+    score4 = Score(3)
+    score4.ajouterScore(0, 10)
+    score4.ajouterScore(1, 3)
+
+    assert score4.tableauScoreCourant() == [13, 16]
 
 
 def test_calculScoreCourant():
