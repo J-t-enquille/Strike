@@ -12,8 +12,18 @@ class Partie:
             for player in players:
                 self.addPlayer(player)
 
+    def setNombreTour(self, nombreTour):
+        self.nombre_tours = nombreTour
+        for player in self.scores:
+            self.scores[player].setNombreTour(nombreTour)
+
+    def setNombreQuille(self, nombreQuille):
+        self.nombre_quilles = nombreQuille
+        for player in self.scores:
+            self.scores[player].setNombreQuille(nombreQuille)
+
     # Ajouter un joueur à la partie s'il n'est pas déjà présent
-    #passer un objet Player en paramètre
+    # passer un objet Player en paramètre
     def addPlayer(self, player):
         if player.get_name() not in self.scores:
             self.scores[player.get_name()] = Score(self.nombre_tours, self.nombre_quilles)

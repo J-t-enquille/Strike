@@ -281,9 +281,9 @@ class App(ctk.CTk):
         self.indiceplayer = 0
         self.activeplayer = list(self.partie.scores)[self.indiceplayer]
         if self.game_settings.get_pins() != 0:
-            self.partie.nombre_quilles = self.game_settings.get_pins()
+            self.partie.setNombreQuille(self.game_settings.get_pins())
         if self.game_settings.get_rounds() != 0:
-            self.partie.nombre_tours = self.game_settings.get_rounds()
+            self.partie.setNombreTour(self.game_settings.get_rounds())
         print(self.partie.nombre_quilles)
         print(self.partie.nombre_tours)
         print(list(self.partie.scores))
