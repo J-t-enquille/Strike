@@ -2,6 +2,7 @@ from src.Score import Score
 
 
 class Partie:
+    # passer un tableau d'objet Player en paramètre
     def __init__(self, players=None, nombre_tours=10, nombre_quilles=10):
         self.scores = {}
         self.nombre_tours = nombre_tours
@@ -12,6 +13,7 @@ class Partie:
                 self.addPlayer(player)
 
     # Ajouter un joueur à la partie s'il n'est pas déjà présent
+    #passer un objet Player en paramètre
     def addPlayer(self, player):
         if player.get_name() not in self.scores:
             self.scores[player.get_name()] = Score(self.nombre_tours, self.nombre_quilles)
