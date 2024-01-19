@@ -7,14 +7,14 @@ class Partie:
         self.nombre_tours = nombre_tours
         self.nombre_quilles = nombre_quilles
 
-        if players:
+        if players is not None:
             for player in players:
                 self.addPlayer(player)
 
     # Ajouter un joueur à la partie s'il n'est pas déjà présent
     def addPlayer(self, player):
-        if player not in self.scores:
-            self.scores[player] = Score(self.nombre_tours, self.nombre_quilles)
+        if player.get_name() not in self.scores:
+            self.scores[player.get_name()] = Score(self.nombre_tours, self.nombre_quilles)
 
     # Ajouter un score pour un joueur dans un tour spécifique
     def addScore(self, player, numerotour, lancer1=0, lancer2=0, lancer3=0):
