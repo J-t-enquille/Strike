@@ -165,7 +165,6 @@ class App(ctk.CTk):
                                          command=self.play_button_event)
         self.play_button.grid(row=3, column=0, sticky="ew")
 
-
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],
                                                       command=App.change_appearance_mode_event)
@@ -202,7 +201,6 @@ class App(ctk.CTk):
                 self.numberofbowlingpins = numberofbowlingpins
                 self.numberofrounds = numberofrounds
                 self.playersofthisgame = []
-
 
         self.partie = Partie()
 
@@ -310,8 +308,8 @@ class App(ctk.CTk):
             self.playerscore_widgets[player] = PlayerInfoWidgets(player, self.partie.nombre_tours, self.scoretab_frame)
 
             self.playerscore_widgets[player].playerscore_frame.grid(row=cpt + 1,
-                                                                                                     column=0, padx=20,
-                                                                                                     pady=10)
+                                                                    column=0, padx=20,
+                                                                    pady=10)
             self.playerscore_widgets[player].playerscore_frame.grid_columnconfigure(
                 self.partie.nombre_tours + 2, weight=1)
             cpt += 1
@@ -376,16 +374,28 @@ class App(ctk.CTk):
                         self.playerscore_widgets[
                             self.activeplayer].scorecase_frame_tab[
                             self.activeround - 1].secondtrial_label.cget("text"))
+                    self.partie.addScore(self.partie.scores[self.activeplayer], self.activeround,
+                                         self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
+                                             self.activeround - 1].firsttrial_label.cget("text"),
+                                         self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
+                                             self.activeround - 1].secondtrial_label.cget("text"))
+                    allscore_currentplayer = next(
+                        (item for item in self.partie.displayScores() if item["player"] == self.activeplayer), None)
                     self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
-                        self.activeround - 1].sumscoretrial_label.configure(text=str(sumtrials))
+                        self.activeround - 1].sumscoretrial_label.configure(
+                        text=allscore_currentplayer["tableau"][self.activeround - 1])
+
                     sumscorerounds = int(self.playerscore_widgets[
-                                             self.activeplayer].totalscore_label.cget(
+                        self.activeplayer].totalscore_label.cget(
                         "text")) + int(self.playerscore_widgets[
                                            self.activeplayer].scorecase_frame_tab[
                                            self.activeround - 1].sumscoretrial_label.cget("text"))
+                    allscore_currentplayer = next(
+                        (item for item in self.partie.displayScores() if item["player"] == self.activeplayer), None)
+
                     self.playerscore_widgets[
                         self.activeplayer].totalscore_label.configure(
-                        text=sumscorerounds)
+                        text=allscore_currentplayer["total_score"])
                     self.activetrial = 1
                     self.playerscore_widgets[
                         self.activeplayer].playerscore_label.configure(
