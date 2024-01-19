@@ -3,6 +3,7 @@ import customtkinter as ctk
 from src.gui.components.FormInput import FormInput
 from src.gui.components.LabeledInput import LabeledInput
 from src.gui.components.PlayersFrame import PlayersFrame
+from src.Parser import Parser
 
 
 class GameSettings(ctk.CTkFrame):
@@ -25,11 +26,15 @@ class GameSettings(ctk.CTkFrame):
                                              font=ctk.CTkFont(size=34, weight="bold"))
         self.add_player_label.grid(row=0, column=0, padx=20, pady=10, sticky="s")
 
-        self.list_player = ["Vladimir", "Gaston", "Julie", "Lorenzo", "Camille"]
+        self.parser = Parser()
+        self.parser.getPlayers()
 
-        self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.list_player)
+        self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.parser.player)
         self.players_frame.grid(row=1, column=0)
 
+        self.list_player = []
+        for player in self.parser.player:
+            self.list_player.append(player.name)
         self.add_player_form = FormInput(self.add_player_frame,
                                          onSubmit=self.add_player_button,
                                          placeholder_text="Player name", btn_text="Add player",
@@ -68,8 +73,8 @@ class GameSettings(ctk.CTkFrame):
     # add player button handler
     def add_player_button(self, playername):
         self.players_frame.destroy()
-        self.list_player.append(playername)
-        self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.list_player)
+        self.parser.addPlayer(playername)
+        self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.parser.player)
         for player in self.settings.playersofthisgame:
             self.players_frame.get_player_button(player).configure(border_width=5, border_color="gray75")
         self.players_frame.grid(row=1, column=0, sticky='ew')

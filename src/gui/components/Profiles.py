@@ -8,7 +8,6 @@ from PIL import Image
 from src.gui.components.FormInput import FormInput
 from src.gui.components.PlayersFrame import PlayersFrame
 from src.Parser import Parser
-from src.Player import Player
 
 
 class ToplevelWindow(ctk.CTkToplevel):
