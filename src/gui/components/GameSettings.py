@@ -9,8 +9,8 @@ from src.Partie import Partie
 
 
 class GameSettings(ctk.CTkFrame):
-    def __init__(self, master, settings, partie, start_game, **kwargs):
-        self.settings = settings
+    def __init__(self, master,  partie, start_game, **kwargs):
+
         self.partie = partie
 
         super().__init__(master, **kwargs)
@@ -86,11 +86,9 @@ class GameSettings(ctk.CTkFrame):
         if playername not in list(self.partie.scores):
             self.players_frame.get_player_button(playername).configure(border_width=5, border_color="gray75")
             self.partie.addPlayer(Player(playername))
-            #self.settings.playersofthisgame.append(playername)
         else:
             self.players_frame.get_player_button(playername).configure(border_width=0)
             self.partie.scores.remove(playername)
-            #self.settings.playersofthisgame.remove(playername)
 
         if len(self.partie.scores) > 0:
             self.start_game_button.configure(state="normal")

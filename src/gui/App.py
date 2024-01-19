@@ -206,9 +206,8 @@ class App(ctk.CTk):
 
         self.partie = Partie()
 
-        self.settings = SettingsGame(10, 10)
         # create settings frame of play frame
-        self.game_settings = GameSettings(self.play_frame, self.settings,self.partie, start_game=self.start_game)
+        self.game_settings = GameSettings(self.play_frame, self.partie, start_game=self.start_game)
         self.game_settings.grid(row=0, column=0, sticky="nsew")
 
         # create playgame frame of play frame
@@ -297,9 +296,9 @@ class App(ctk.CTk):
             self.activeround - 1].firsttrial_frame.configure(fg_color="#1f6aa5")
 
     def buildscoretab_frame(self):
-        self.headertab_frame.grid_columnconfigure(self.settings.numberofrounds + 1, weight=1)
+        self.headertab_frame.grid_columnconfigure(self.partie.nombre_tours + 1, weight=1)
 
-        for rounds in range(self.settings.numberofrounds):
+        for rounds in range(self.partie.nombre_tours):
             self.round_frame = ctk.CTkFrame(self.headertab_frame, corner_radius=0, fg_color="transparent", width=25,
                                             border_width=1)
             self.round_frame.grid(row=0, column=rounds + 1, pady=10)
@@ -308,22 +307,22 @@ class App(ctk.CTk):
             self.round_label.grid(row=0, column=0, padx=20, pady=10)
         cpt = 0
         for player in self.partie.scores:
-            self.playerscore_widgets[player] = PlayerInfoWidgets(player, self.settings.numberofrounds, self.scoretab_frame)
+            self.playerscore_widgets[player] = PlayerInfoWidgets(player, self.partie.nombre_tours, self.scoretab_frame)
 
             self.playerscore_widgets[player].playerscore_frame.grid(row=cpt + 1,
                                                                                                      column=0, padx=20,
                                                                                                      pady=10)
             self.playerscore_widgets[player].playerscore_frame.grid_columnconfigure(
-                self.settings.numberofrounds + 2, weight=1)
+                self.partie.nombre_tours + 2, weight=1)
             cpt += 1
         self.enterscore_label.configure(
             text="Enter a first score for " + self.activeplayer)
 
     def enterscore(self):
         trial = ""
-        numberofpins = self.settings.numberofbowlingpins
+        numberofpins = self.partie.nombre_quilles
         if self.enterscore_entry.get().isdigit() and int(
-                self.enterscore_entry.get()) <= self.settings.numberofbowlingpins:
+                self.enterscore_entry.get()) <= self.partie.nombre_quilles:
             self.enterscore_warning_label.configure(text="")
             if self.enterscore_entry.get() != "":
                 if self.activetrial == 1:
@@ -341,7 +340,7 @@ class App(ctk.CTk):
                     self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].firsttrial_frame.configure(fg_color="transparent")
 
-                    if int(self.enterscore_entry.get()) == self.settings.numberofbowlingpins:
+                    if int(self.enterscore_entry.get()) == self.partie.nombre_quilles:
                         if self.activeplayer == list(self.partie.scores)[len(self.partie.scores) - 1]:
                             self.indiceplayer = 0
                             self.activeplayer = list(self.partie.scores)[self.indiceplayer]
@@ -417,10 +416,10 @@ class App(ctk.CTk):
         elif not self.enterscore_entry.get().isdigit():
             self.enterscore_entry.delete(0, "end")
             self.enterscore_warning_label.configure(text="Please enter a number")
-        elif int(self.enterscore_entry.get()) > self.settings.numberofbowlingpins:
+        elif int(self.enterscore_entry.get()) > self.partie.nombre_quilles:
             self.enterscore_entry.delete(0, "end")
             self.enterscore_warning_label.configure(
-                text="Please enter a number between 0 and " + str(self.settings.numberofbowlingpins))
+                text="Please enter a number between 0 and " + str(self.partie.nombre_quilles))
 
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):
