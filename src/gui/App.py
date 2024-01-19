@@ -209,8 +209,8 @@ class App(ctk.CTk):
 
         self.settings = SettingsGame(10, 10)
         # create settings frame of play frame
-        self.game_settings = GameSettings(self.play_frame, self.settings, start_game=self.start_game)
-        self.game_settings.grid(row=0, column=0, sticky="nsew")
+        # self.game_settings = GameSettings(self.play_frame, self.settings, start_game=self.start_game)
+        # self.game_settings.grid(row=0, column=0, sticky="nsew")
 
         # create playgame frame of play frame
         self.activeplayer = 0
