@@ -1,21 +1,23 @@
 from src.Partie import Partie
-
+from src.Player import Player
 
 def test_addPlayer():
     partie = Partie()
-    partie.addPlayer("Maeva")
-    assert "Maeva" in partie.scores
+    maeva=Player("Maeva")
+    partie.addPlayer(maeva)
+    assert maeva.get_name() in partie.scores
 
 
 def test_addScore():
     partie = Partie()
-    partie.addPlayer("Alice")
+    alice= Player("Alice")
+    partie.addPlayer(alice)
     partie.addScore("Alice", 0, 4, 5)
     assert partie.scores["Alice"].calculScoreCourant(0) == 9
 
     assert partie.addScore("Lola", 0, 4, 5) is False
 
-    partie2 = Partie(["Alice"], 10, 3)
+    partie2 = Partie([Player("Alice")], 10, 3)
     assert partie2.addScore("Alice", 0, 8, 5) is False
 
 
@@ -26,7 +28,7 @@ def test_addScore_player_null():
 
 
 def test_displayScores():
-    partie = Partie(["Alice", "Bob", "Lola"])
+    partie = Partie([Player("Alice"), Player("Bob"), Player("Lola")])
     partie.addScore("Alice", 0, 4, 5)
     partie.addScore("Alice", 1, 0, 0)
     partie.addScore("Alice", 2, 0, 0)
@@ -69,7 +71,7 @@ def test_displayScores():
     assert lola_scores["total_score"] == 20
     assert lola_scores["tableau"] == [14, 20]
 
-    partie2 = Partie(["Alice", "Bob", "Lola"], 5)
+    partie2 = Partie([Player("Alice"), Player("Bob"), Player("Lola")], 5)
     partie2.addScore("Alice", 0, 8, 2)
     partie2.addScore("Alice", 1, 10)
     partie2.addScore("Alice", 2, 0, 8)
@@ -83,7 +85,7 @@ def test_displayScores():
     assert alice_scores2["total_score"] == 74
     assert partie2.addScore("Alice", 5, 5, 4) is False
 
-    partie3 = Partie(["Alice", "Bob", "Lola"], 10, 5)
+    partie3 = Partie([Player("Alice"), Player("Bob"), Player("Lola")], 10, 5)
     partie3.addScore("Alice", 0, 4, 1)
     partie3.addScore("Alice", 1, 5)
     partie3.addScore("Alice", 2, 0, 4)
