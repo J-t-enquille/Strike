@@ -203,14 +203,12 @@ class App(ctk.CTk):
                 self.numberofrounds = numberofrounds
                 self.playersofthisgame = []
 
-        self.parser = Parser()
 
-        self.parser.getPlayers()
         self.partie = Partie()
 
         self.settings = SettingsGame(10, 10)
         # create settings frame of play frame
-        self.game_settings = GameSettings(self.play_frame, self.settings, start_game=self.start_game)
+        self.game_settings = GameSettings(self.play_frame, self.settings,self.partie, start_game=self.start_game)
         self.game_settings.grid(row=0, column=0, sticky="nsew")
 
         # create playgame frame of play frame
@@ -282,12 +280,12 @@ class App(ctk.CTk):
 
     def start_game(self):
         if self.game_settings.get_pins() != 0:
-            self.settings.numberofbowlingpins = self.game_settings.get_pins()
+            self.partie.nombre_quilles = self.game_settings.get_pins()
         if self.game_settings.get_rounds() != 0:
-            self.settings.numberofrounds = self.game_settings.get_rounds()
-        print(self.settings.numberofbowlingpins)
-        print(self.settings.numberofrounds)
-        print(self.settings.playersofthisgame)
+            self.partie.nombre_tours = self.game_settings.get_rounds()
+        print(self.partie.nombre_quilles)
+        print(self.partie.nombre_tours)
+        print(list(self.partie.scores))
         self.game_settings.destroy()
         self.playgame_frame.grid(row=0, column=0, sticky="ew")
         self.buildscoretab_frame()

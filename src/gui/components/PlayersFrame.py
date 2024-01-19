@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import random
 from functools import partial
+from src.Player import Player
 
 
 class PlayersFrame(ctk.CTkFrame):
@@ -14,10 +15,10 @@ class PlayersFrame(ctk.CTkFrame):
         row = 0
         for player in players:
             color = random_color()
-            self.player_button[player] = ctk.CTkButton(self, text=player.name,
+            self.player_button[player.get_name()] = ctk.CTkButton(self, text=player.get_name(),
                                                        border_spacing=10,
                                                        font=ctk.CTkFont(size=20, weight="bold"), fg_color=color,
-                                                       corner_radius=10, command=partial(onClick, player.name))
+                                                       corner_radius=10, command=partial(onClick, player.get_name()))
         for player in self.player_button:
             self.player_button[player].grid(row=row, column=i, padx=10, pady=15)
             i += 1

@@ -1,15 +1,17 @@
 import customtkinter as ctk
 
+from src.Player import Player
 from src.gui.components.FormInput import FormInput
 from src.gui.components.LabeledInput import LabeledInput
 from src.gui.components.PlayersFrame import PlayersFrame
 from src.Parser import Parser
-
+from src.Partie import Partie
 
 
 class GameSettings(ctk.CTkFrame):
-    def __init__(self, master, settings, start_game, **kwargs):
+    def __init__(self, master, settings, partie, start_game, **kwargs):
         self.settings = settings
+        self.partie = partie
 
         super().__init__(master, **kwargs)
 
@@ -76,19 +78,21 @@ class GameSettings(ctk.CTkFrame):
         self.players_frame.destroy()
         self.parser.addPlayer(playername)
         self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.parser.player)
-        for player in self.settings.playersofthisgame:
+        for player in list(self.partie.scores):
             self.players_frame.get_player_button(player).configure(border_width=5, border_color="gray75")
         self.players_frame.grid(row=1, column=0, sticky='ew')
 
     def select_player(self, playername):
-        if playername not in self.settings.playersofthisgame:
+        if playername not in list(self.partie.scores):
             self.players_frame.get_player_button(playername).configure(border_width=5, border_color="gray75")
-            self.settings.playersofthisgame.append(playername)
+            self.partie.addPlayer(Player(playername))
+            #self.settings.playersofthisgame.append(playername)
         else:
             self.players_frame.get_player_button(playername).configure(border_width=0)
-            self.settings.playersofthisgame.remove(playername)
+            self.partie.scores.remove(playername)
+            #self.settings.playersofthisgame.remove(playername)
 
-        if len(self.settings.playersofthisgame) > 0:
+        if len(self.partie.scores) > 0:
             self.start_game_button.configure(state="normal")
         else:
             self.start_game_button.configure(state="disabled")
