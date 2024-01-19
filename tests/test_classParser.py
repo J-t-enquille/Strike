@@ -21,6 +21,8 @@ def test_delete_player():
     assert len(parser.getPlayers()) == 1
     assert parser.deletePlayer("Test") == True
     assert len(parser.getPlayers()) == 0
+    assert parser.lastIdPlayer() == 0
+    assert parser.playerExist("Test") is None
 
 
 def test_delete_all_players():
