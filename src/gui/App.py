@@ -7,6 +7,9 @@ from functools import partial
 from src.gui.components.GameSettings import GameSettings
 from src.gui.components.PlayersFrame import PlayersFrame
 from src.gui.components.Profiles import Profiles
+from src.Partie import Partie
+from src.Score import Score
+from src.Parser import Parser
 
 
 def random_color():
@@ -161,14 +164,7 @@ class App(ctk.CTk):
                                          image=self.play_image, anchor="w",
                                          command=self.play_button_event)
         self.play_button.grid(row=3, column=0, sticky="ew")
-        # self.newgame_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
-        #                                    border_spacing=10, text="New Game",
-        #                                    font=ctk.CTkFont(size=18),
-        #                                    fg_color="transparent", text_color=("gray10", "gray90"),
-        #                                    hover_color=("gray70", "gray30"),
-        #                                    image=self.newgame_image, anchor="w",
-        #                                    command=self.newgame_button_event)
-        # self.newgame_button.grid(row=3, column=0, sticky="ew")
+
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],
@@ -206,6 +202,11 @@ class App(ctk.CTk):
                 self.numberofbowlingpins = numberofbowlingpins
                 self.numberofrounds = numberofrounds
                 self.playersofthisgame = []
+
+        self.parser = Parser()
+
+        self.parser.getPlayers()
+        self.partie = Partie()
 
         self.settings = SettingsGame(10, 10)
         # create settings frame of play frame

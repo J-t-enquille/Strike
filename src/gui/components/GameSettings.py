@@ -5,6 +5,7 @@ from src.gui.components.LabeledInput import LabeledInput
 from src.gui.components.PlayersFrame import PlayersFrame
 
 
+
 class GameSettings(ctk.CTkFrame):
     def __init__(self, master, settings, start_game, **kwargs):
         self.settings = settings
