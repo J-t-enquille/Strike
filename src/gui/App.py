@@ -212,7 +212,7 @@ class App(ctk.CTk):
         self.game_settings.grid(row=0, column=0, sticky="nsew")
 
         # create playgame frame of play frame
-        self.activeplayer = 0
+        self.activeplayer = ""
         self.activetrial = 1
         self.activeround = 1
         self.playgame_frame = ctk.CTkFrame(self.play_frame, corner_radius=0, fg_color="transparent")
@@ -279,6 +279,8 @@ class App(ctk.CTk):
         self.select_frame_by_name("play")
 
     def start_game(self):
+        self.indiceplayer = 0
+        self.activeplayer = list(self.partie.scores)[self.indiceplayer]
         if self.game_settings.get_pins() != 0:
             self.partie.nombre_quilles = self.game_settings.get_pins()
         if self.game_settings.get_rounds() != 0:
@@ -289,9 +291,9 @@ class App(ctk.CTk):
         self.game_settings.destroy()
         self.playgame_frame.grid(row=0, column=0, sticky="ew")
         self.buildscoretab_frame()
-        self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].playerscore_label.configure(
+        self.playerscore_widgets[self.activeplayer].playerscore_label.configure(
             text_color="#1f6aa5")
-        self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+        self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
             self.activeround - 1].firsttrial_frame.configure(fg_color="#1f6aa5")
 
     def buildscoretab_frame(self):
@@ -304,18 +306,18 @@ class App(ctk.CTk):
             self.round_label = ctk.CTkLabel(self.round_frame, text=str(rounds + 1),
                                             font=ctk.CTkFont(size=20, weight="bold"))
             self.round_label.grid(row=0, column=0, padx=20, pady=10)
+        cpt = 0
+        for player in self.partie.scores:
+            self.playerscore_widgets[player] = PlayerInfoWidgets(player, self.settings.numberofrounds, self.scoretab_frame)
 
-        for player in range(len(self.settings.playersofthisgame)):
-            self.playerscore_widgets[self.settings.playersofthisgame[player]] = PlayerInfoWidgets(
-                self.settings.playersofthisgame[player], self.settings.numberofrounds, self.scoretab_frame)
-
-            self.playerscore_widgets[self.settings.playersofthisgame[player]].playerscore_frame.grid(row=player + 1,
+            self.playerscore_widgets[player].playerscore_frame.grid(row=cpt + 1,
                                                                                                      column=0, padx=20,
                                                                                                      pady=10)
-            self.playerscore_widgets[self.settings.playersofthisgame[player]].playerscore_frame.grid_columnconfigure(
+            self.playerscore_widgets[player].playerscore_frame.grid_columnconfigure(
                 self.settings.numberofrounds + 2, weight=1)
+            cpt += 1
         self.enterscore_label.configure(
-            text="Enter a first score for " + self.settings.playersofthisgame[self.activeplayer])
+            text="Enter a first score for " + self.activeplayer)
 
     def enterscore(self):
         trial = ""
@@ -325,87 +327,89 @@ class App(ctk.CTk):
             self.enterscore_warning_label.configure(text="")
             if self.enterscore_entry.get() != "":
                 if self.activetrial == 1:
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].firsttrial_label.configure(text=self.enterscore_entry.get())
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].sumscoretrial_label.configure(text=self.enterscore_entry.get())
-                    sumscorerounds = int(self.playerscore_widgets[
-                                             self.settings.playersofthisgame[self.activeplayer]].totalscore_label.cget(
-                        "text")) + int(self.playerscore_widgets[
-                                           self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    sumscorerounds = int(self.playerscore_widgets[self.activeplayer].totalscore_label.cget(
+                        "text")) + int(self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                                            self.activeround - 1].sumscoretrial_label.cget("text"))
                     self.playerscore_widgets[
-                        self.settings.playersofthisgame[self.activeplayer]].totalscore_label.configure(
+                        self.activeplayer].totalscore_label.configure(
                         text=sumscorerounds)
 
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].firsttrial_frame.configure(fg_color="transparent")
 
                     if int(self.enterscore_entry.get()) == self.settings.numberofbowlingpins:
-                        if self.activeplayer == len(self.settings.playersofthisgame) - 1:
-                            self.activeplayer = 0
+                        if self.activeplayer == list(self.partie.scores)[len(self.partie.scores) - 1]:
+                            self.indiceplayer = 0
+                            self.activeplayer = list(self.partie.scores)[self.indiceplayer]
                             self.activeround += 1
                         else:
-                            self.activeplayer += 1
+                            self.indiceplayer += 1
+                            self.activeplayer = list(self.partie.scores)[self.indiceplayer]
                         self.activetrial = 1
                         self.enterscore_label.configure(
-                            text="Enter first score for " + self.settings.playersofthisgame[self.activeplayer])
+                            text="Enter first score for " + self.activeplayer)
                         self.playerscore_widgets[
-                            self.settings.playersofthisgame[self.activeplayer]].playerscore_label.configure(
+                            self.activeplayer].playerscore_label.configure(
                             text_color="#1f6aa5")
                         self.playerscore_widgets[
-                            self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                            self.activeplayer].scorecase_frame_tab[
                             self.activeround - 1].firsttrial_frame.configure(fg_color="#1f6aa5")
                     else:
                         self.activetrial += 1
 
                         self.playerscore_widgets[
-                            self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                            self.activeplayer].scorecase_frame_tab[
                             self.activeround - 1].secondtrial_frame.configure(fg_color="#1f6aa5")
                         self.enterscore_label.configure(
-                            text="Enter second score for " + self.settings.playersofthisgame[self.activeplayer])
+                            text="Enter second score for " + self.activeplayer)
                     self.enterscore_entry.delete(0, "end")
                 elif self.activetrial == 2:
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].secondtrial_label.configure(text=self.enterscore_entry.get())
                     sumtrials = int(
                         self.playerscore_widgets[
-                            self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                            self.activeplayer].scorecase_frame_tab[
                             self.activeround - 1].firsttrial_label.cget("text")) + int(
                         self.playerscore_widgets[
-                            self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                            self.activeplayer].scorecase_frame_tab[
                             self.activeround - 1].secondtrial_label.cget("text"))
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].sumscoretrial_label.configure(text=str(sumtrials))
                     sumscorerounds = int(self.playerscore_widgets[
-                                             self.settings.playersofthisgame[self.activeplayer]].totalscore_label.cget(
+                                             self.activeplayer].totalscore_label.cget(
                         "text")) + int(self.playerscore_widgets[
-                                           self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                                           self.activeplayer].scorecase_frame_tab[
                                            self.activeround - 1].sumscoretrial_label.cget("text"))
                     self.playerscore_widgets[
-                        self.settings.playersofthisgame[self.activeplayer]].totalscore_label.configure(
+                        self.activeplayer].totalscore_label.configure(
                         text=sumscorerounds)
                     self.activetrial = 1
                     self.playerscore_widgets[
-                        self.settings.playersofthisgame[self.activeplayer]].playerscore_label.configure(
+                        self.activeplayer].playerscore_label.configure(
                         text_color="gray75")
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].secondtrial_frame.configure(fg_color="transparent")
 
-                    if self.activeplayer == len(self.settings.playersofthisgame) - 1:
-                        self.activeplayer = 0
+                    if self.activeplayer == list(self.partie.scores)[len(self.partie.scores) - 1]:
+                        self.indiceplayer = 0
+                        self.activeplayer = list(self.partie.scores)[self.indiceplayer]
                         self.activeround += 1
 
                     else:
-                        self.activeplayer += 1
+                        self.indiceplayer += 1
+                        self.activeplayer = list(self.partie.scores)[self.indiceplayer]
                     self.playerscore_widgets[
-                        self.settings.playersofthisgame[self.activeplayer]].playerscore_label.configure(
+                        self.activeplayer].playerscore_label.configure(
                         text_color="#1f6aa5")
-                    self.playerscore_widgets[self.settings.playersofthisgame[self.activeplayer]].scorecase_frame_tab[
+                    self.playerscore_widgets[self.activeplayer].scorecase_frame_tab[
                         self.activeround - 1].firsttrial_frame.configure(fg_color="#1f6aa5")
 
                     self.enterscore_label.configure(
-                        text="Enter first score for " + self.settings.playersofthisgame[self.activeplayer])
+                        text="Enter first score for " + self.activeplayer)
                     self.enterscore_entry.delete(0, "end")
 
                 self.enterscore_entry.delete(0, "end")
