@@ -144,5 +144,4 @@ def test_displayScores():
     assert bob_scores5 is not None
     assert bob_scores5["player"] == "Bob"
     assert bob_scores5["total_score"] == 10
-    assert bob_scores5["tableau"] == [7,10]
-
+    assert bob_scores5["tableau"] == [7, 10]

@@ -106,14 +106,14 @@ def test_calculScoreLancer():
     assert score6.calculScoreLancer(2) == 8
 
     score7 = Score(3)
-    score7.ajouterScore(0,10)
+    score7.ajouterScore(0, 10)
 
     assert score7.calculScoreLancer(0) is None
 
     score8 = Score(3)
-    score8.ajouterScore(0,10)
-    score8.ajouterScore(1,10)
-    score8.ajouterScore(2,10,10,10)
+    score8.ajouterScore(0, 10)
+    score8.ajouterScore(1, 10)
+    score8.ajouterScore(2, 10, 10, 10)
 
     assert score8.calculScoreLancer(0) == 30
     assert score8.calculScoreLancer(1) == 30
@@ -134,9 +134,9 @@ def test_score_total():
     score2.ajouterScore(1, 10)
     score2.ajouterScore(2, 3, 7)
     score2.ajouterScore(3, 4, 3)
-    scoreTotal2 = score2.scoreTotal()
+    score_total2 = score2.scoreTotal()
 
-    assert scoreTotal2 == 50
+    assert score_total2 == 50
 
 
 def test_tableauScoreCourant():
@@ -151,14 +151,14 @@ def test_tableauScoreCourant():
     assert score.scoreTotal() == 74
 
     score2 = Score(3)
-    score2.ajouterScore(0,10)
+    score2.ajouterScore(0, 10)
     score2.ajouterScore(1, 10)
-    score2.ajouterScore(2, 10,10,10)
+    score2.ajouterScore(2, 10, 10, 10)
 
     assert score2.tableauScoreCourant() == [30, 60, 90]
 
     score3 = Score(3)
-    score3.ajouterScore(0,10)
+    score3.ajouterScore(0, 10)
 
     assert score3.tableauScoreCourant() == []
 
@@ -182,6 +182,16 @@ def test_calculScoreCourant():
     assert score.calculScoreCourant(2) == 46
     assert score.calculScoreCourant(3) == 65
     assert score.calculScoreCourant(4) == 74
+    assert score.calculScoreCourant(5) is None
+
+    score2 = Score(3)
+    score2.ajouterScore(0, 10)
+    score2.ajouterScore(1, 10)
+    score2.ajouterScore(2, 10, 10, 10)
+
+    assert score2.calculScoreCourant(0) == 30
+    assert score2.calculScoreCourant(1) == 60
+    assert score2.calculScoreCourant(2) == 90
 
 
 def test_get_scores():
@@ -192,3 +202,11 @@ def test_get_scores():
     scores = score.getScores()
 
     assert scores == [(4, 5), (2, 8), (10, 0)]
+
+    score2 = Score(3)
+    score2.ajouterScore(0, 10)
+    score2.ajouterScore(1, 10)
+    score2.ajouterScore(2, 10, 10, 10)
+    scores2 = score2.getScores()
+
+    assert scores2 == [(10, 0), (10, 0), (10, 10, 10)]
