@@ -385,6 +385,14 @@ class App(ctk.CTk):
                 elif self.stategame.activetrial == 3:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].thirdtrial_frame.configure(fg_color="transparent")
                     self.playerscore_widgets[self.stategame.activeplayer].playerscore_label.configure(text_color="gray75")
+                    allscore_currentplayer = next(
+                        (item for item in self.partie.displayScores() if
+                         item["player"] == self.stategame.activeplayer),
+                        None)
+                    for round in range(self.stategame.activeround):
+                        self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                            round].sumscoretrial_label.configure(
+                            text=allscore_currentplayer["tableau"][round])
                     if not self.endofgame():
                         self.stategame.activetrial = 1
                         self.stategame.remainingpins = self.partie.nombre_quilles
@@ -403,6 +411,13 @@ class App(ctk.CTk):
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].firsttrial_frame.configure(fg_color="transparent")
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].secondtrial_frame.configure(fg_color="transparent")
                     self.playerscore_widgets[self.stategame.activeplayer].playerscore_label.configure(text_color="gray75")
+                    allscore_currentplayer = next(
+                        (item for item in self.partie.displayScores() if
+                         item["player"] == self.stategame.activeplayer),
+                        None)
+                    for round in range(self.stategame.activeround):
+                        self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[round].sumscoretrial_label.configure(
+                            text=allscore_currentplayer["tableau"][round])
                     if not self.endofgame():
                         self.stategame.iplayer += 1
                         # last player
@@ -420,6 +435,14 @@ class App(ctk.CTk):
                 self.playerscore_widgets[self.stategame.activeplayer].playerscore_label.configure(text_color="gray75")
                 self.stategame.activetrial = 1
                 self.stategame.remainingpins = self.partie.nombre_quilles
+                allscore_currentplayer = next(
+                    (item for item in self.partie.displayScores() if
+                     item["player"] == self.stategame.activeplayer),
+                    None)
+                for round in range(self.stategame.activeround):
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        round].sumscoretrial_label.configure(
+                        text=allscore_currentplayer["tableau"][round])
                 self.stategame.iplayer += 1
                 # last player
                 if self.stategame.iplayer == len(self.partie.scores):
@@ -438,6 +461,14 @@ class App(ctk.CTk):
         elif self.stategame.activetrial == 3:
             self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].thirdtrial_frame.configure(fg_color="transparent")
             self.playerscore_widgets[self.stategame.activeplayer].playerscore_label.configure(text_color="gray75")
+            allscore_currentplayer = next(
+                (item for item in self.partie.displayScores() if
+                 item["player"] == self.stategame.activeplayer),
+                None)
+            for round in range(self.stategame.activeround):
+                self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                    round].sumscoretrial_label.configure(
+                    text=allscore_currentplayer["tableau"][round])
             if not self.endofgame():
                 self.stategame.activetrial = 1
                 self.stategame.remainingpins = self.partie.nombre_quilles
@@ -456,6 +487,15 @@ class App(ctk.CTk):
             self.enterscore_frame.grid_forget()
             return True
 
+    def displayscore(self):
+        allscore_currentplayer = next(
+            (item for item in self.partie.displayScores() if item["player"] == self.stategame.activeplayer),
+            None)
+        self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+            self.stategame.activeround].sumscoretrial_label.configure(
+            text=allscore_currentplayer["tableau"][self.stategame.activeround])
+        self.playerscore_widgets[self.stategame.activeplayer].totalscore_label.configure(
+            text=allscore_currentplayer["total_score"])
 
 
     @staticmethod
