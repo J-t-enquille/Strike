@@ -95,7 +95,7 @@ class Score:
             tableauScoreCourant.append(self.calculScoreLancer(0))
 
         for i in range(1, self.nombreTour):
-            if self.score[i] is not None:
+            if self.score[i] is not None and self.calculScoreLancer(i) is not None:
                 tableauScoreCourant.append(tableauScoreCourant[i - 1] + self.calculScoreLancer(i))
 
         return tableauScoreCourant

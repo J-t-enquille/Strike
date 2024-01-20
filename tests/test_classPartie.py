@@ -1,16 +1,17 @@
 from src.Partie import Partie
 from src.Player import Player
 
+
 def test_addPlayer():
     partie = Partie()
-    maeva=Player("Maeva")
+    maeva = Player("Maeva")
     partie.addPlayer(maeva)
     assert maeva.get_name() in partie.scores
 
 
 def test_addScore():
     partie = Partie()
-    alice= Player("Alice")
+    alice = Player("Alice")
     partie.addPlayer(alice)
     partie.addScore("Alice", 0, 4, 5)
     assert partie.scores["Alice"].calculScoreCourant(0) == 9
@@ -99,3 +100,49 @@ def test_displayScores():
     assert alice_scores3["total_score"] == 36
     assert partie3.addScore("Alice", 4, 4, 2) is False
     assert partie3.addScore("Alice", 11, 4, 2) is False
+
+    partie4 = Partie([Player("Alice"), Player("Bob")], 10, 10)
+    partie4.addScore("Alice", 0, 4, 5)
+    partie4.addScore("Bob", 0, 10)
+    partie4.addScore("Alice", 1, 2, 1)
+    partie4.addScore("Bob", 1, 5, 0)
+    partie4.addScore("Alice", 2, 4, 5)
+
+    scores4 = partie4.displayScores()
+
+    assert len(scores4) == 2
+
+    alice_scores4 = next((item for item in scores4 if item["player"] == "Alice"), None)
+    assert alice_scores4 is not None
+    assert alice_scores4["player"] == "Alice"
+    assert alice_scores4["total_score"] == 21
+    assert alice_scores4["tableau"] == [9, 12, 21]
+
+    bob_scores4 = next((item for item in scores4 if item["player"] == "Bob"), None)
+    assert bob_scores4 is not None
+    assert bob_scores4["player"] == "Bob"
+    assert bob_scores4["total_score"] == 20
+    assert bob_scores4["tableau"] == [15, 20]
+
+    partie5 = Partie([Player("Alice"), Player("Bob")], 10, 5)
+    partie5.addScore("Alice", 0, 4, 1)
+    partie5.addScore("Bob", 0, 3, 2)
+    partie5.addScore("Alice", 1, 5, 0)
+    partie5.addScore("Bob", 1, 2, 1)
+
+    scores5 = partie5.displayScores()
+
+    assert len(scores5) == 2
+
+    alice_scores5 = next((item for item in scores5 if item["player"] == "Alice"), None)
+    assert alice_scores5 is not None
+    assert alice_scores5["player"] == "Alice"
+    assert alice_scores5["total_score"] == 10
+    assert alice_scores5["tableau"] == [10]
+
+    bob_scores5 = next((item for item in scores5 if item["player"] == "Bob"), None)
+    assert bob_scores5 is not None
+    assert bob_scores5["player"] == "Bob"
+    assert bob_scores5["total_score"] == 10
+    assert bob_scores5["tableau"] == [7,10]
+
