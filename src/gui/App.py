@@ -8,8 +8,7 @@ from src.gui.components.GameSettings import GameSettings
 from src.gui.components.PlayersFrame import PlayersFrame
 from src.gui.components.Profiles import Profiles
 from src.Partie import Partie
-from src.Score import Score
-from src.Parser import Parser
+from src.gui.components.FormInput import FormInput
 
 
 def random_color():
@@ -234,6 +233,7 @@ class App(ctk.CTk):
         self.enterscore_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
         self.enterscore_entry_frame = ctk.CTkFrame(self.enterscore_frame, corner_radius=0, fg_color="transparent")
         self.enterscore_entry_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+
         self.enterscore_entry = ctk.CTkEntry(self.enterscore_entry_frame, corner_radius=10)
         self.enterscore_entry.grid(row=0, column=0, padx=20, pady=10)
         self.enterscore_button = ctk.CTkButton(self.enterscore_entry_frame, corner_radius=10, width=100, height=50,
@@ -319,7 +319,7 @@ class App(ctk.CTk):
 
 
     def enterscore(self):
-        if self.enterscore_entry.get().isdigit() and int(self.enterscore_entry.get()) <= self.partie.nombre_quilles:
+        if self.enterscore_entry.get().isdigit() and int(self.enterscore_entry.get()) <= self.stategame.remainingpins:
             self.enterscore_warning_label.configure(text="")
             if self.enterscore_entry.get() != "":
                 self.stategame.remainingpins = self.stategame.remainingpins - int(self.enterscore_entry.get())
@@ -351,7 +351,7 @@ class App(ctk.CTk):
         elif int(self.enterscore_entry.get()) > self.partie.nombre_quilles:
             self.enterscore_entry.delete(0, "end")
             self.enterscore_warning_label.configure(
-                text="Please enter a number between 0 and " + str(self.partie.nombre_quilles))
+                text="Please enter a number between 0 and " + str(self.stategame.remainingpins))
 
 
     def whoplaynext(self):
