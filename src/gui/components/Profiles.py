@@ -60,7 +60,7 @@ class Profiles(ctk.CTkFrame):
         self.add_player_form = FormInput(self.bottom_frame,
                                          onSubmit=self.create_player_button,
                                          placeholder_text="Player name", btn_text="New player",
-                                         warning_callback=lambda playername: playername in self.players_list,
+                                         warning_callback=self.warning,
                                          warning_text="This player already exist !",
                                          allow_empty=False)
         self.add_player_form.grid(row=0, column=1, padx=5, pady=5, sticky="sew")
@@ -100,3 +100,9 @@ class Profiles(ctk.CTkFrame):
         self.parser.deletePlayer(playername)
         self.players_frame = PlayersFrame(self, onClick=self.delete_player, players=self.parser.player)
         self.players_frame.grid(row=player_frame_row, column=0, pady=10)
+
+    def warning(self, playername):
+        player_name_list = []
+        for player in self.parser.player:
+            player_name_list.append(player.get_name())
+        return playername in player_name_list

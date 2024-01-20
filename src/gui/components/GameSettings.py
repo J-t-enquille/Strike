@@ -9,7 +9,7 @@ from src.Partie import Partie
 
 
 class GameSettings(ctk.CTkFrame):
-    def __init__(self, master,  partie, start_game, **kwargs):
+    def __init__(self, master, partie, start_game, **kwargs):
 
         self.partie = partie
 
@@ -35,13 +35,10 @@ class GameSettings(ctk.CTkFrame):
         self.players_frame = PlayersFrame(self.add_player_frame, onClick=self.select_player, players=self.parser.player)
         self.players_frame.grid(row=1, column=0)
 
-        self.list_player = []
-        for player in self.parser.player:
-            self.list_player.append(player.name)
         self.add_player_form = FormInput(self.add_player_frame,
                                          onSubmit=self.add_player_button,
                                          placeholder_text="Player name", btn_text="Add player",
-                                         warning_callback=lambda playername: playername in self.list_player,
+                                         warning_callback=self.warning,
                                          warning_text="This player already exist !",
                                          allow_empty=False)
         self.add_player_form.grid(row=2, column=0, sticky="sew")
@@ -53,11 +50,13 @@ class GameSettings(ctk.CTkFrame):
         self.game_config_frame.grid_columnconfigure(1, weight=1)
         self.game_config_frame.grid(row=1, column=0, padx=10, pady=20, sticky="sew")
 
-        self.pins_input = LabeledInput(self.game_config_frame, label="Number of bowling pins :", placeholder_text="10",
+        self.pins_input = LabeledInput(self.game_config_frame, label="Number of bowling pins :",
+                                       placeholder_text=partie.nombre_quilles,
                                        entry_width=80)
         self.pins_input.grid(row=0, column=0, padx=50, sticky="e")
 
-        self.rounds_input = LabeledInput(self.game_config_frame, label="Number of rounds :", placeholder_text="10",
+        self.rounds_input = LabeledInput(self.game_config_frame, label="Number of rounds :",
+                                         placeholder_text=partie.nombre_tours,
                                          entry_width=80)
         self.rounds_input.grid(row=0, column=1, padx=50, sticky="w")
         # ----------------------------------------------------------------------
@@ -95,8 +94,18 @@ class GameSettings(ctk.CTkFrame):
         else:
             self.start_game_button.configure(state="disabled")
 
+    def warning(self, playername):
+        player_name_list = []
+        for player in self.parser.player:
+            player_name_list.append(player.get_name())
+        return playername in player_name_list
+
     def get_pins(self):
+        if self.pins_input.get() == "":
+            return self.partie.nombre_quilles
         return int(self.pins_input.get())
 
     def get_rounds(self):
+        if self.rounds_input.get() == "":
+            return self.partie.nombre_tours
         return int(self.rounds_input.get())

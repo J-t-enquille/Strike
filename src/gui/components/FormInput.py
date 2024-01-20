@@ -68,4 +68,5 @@ class FormInput(ctk.CTkFrame):
             self.warning_label.configure(text=self.warning_text)
             self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
             return
+        self.warning_label.configure(text="")
         self.onSubmit(self.entry.get())
