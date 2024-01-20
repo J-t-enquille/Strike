@@ -334,7 +334,7 @@ class App(ctk.CTk):
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].firsttrial_label.cget("text")), int(
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
-                        self.stategame.activeround].secondtrial_label.cget("text")), int(self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].thirdtrial_label.cget("text")) if self.stategame.thirdtrial else 0)
+                        self.stategame.activeround].secondtrial_label.cget("text")), int(self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].thirdtrial_label.cget("text")) if self.stategame.activetrial==3 else 0)
                 if self.stategame.remainingpins != 0:
                     allscore_currentplayer = next(
                         (item for item in self.partie.displayScores() if item["player"] == self.stategame.activeplayer),
