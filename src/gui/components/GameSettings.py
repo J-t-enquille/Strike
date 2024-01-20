@@ -40,7 +40,8 @@ class GameSettings(ctk.CTkFrame):
                                          placeholder_text="Player name", btn_text="Add player",
                                          warning_callback=self.warning,
                                          warning_text="This player already exist !",
-                                         allow_empty=False)
+                                         allow_empty=False,
+                                         reset_on_submit=True)
         self.add_player_form.grid(row=2, column=0, sticky="sew")
         # ----------------------------------------------------------------------
 

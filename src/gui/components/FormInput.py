@@ -14,6 +14,8 @@ class FormInput(ctk.CTkFrame):
                  warning_text='',
                  warning_callback=None,
                  allow_empty=False,
+                 reset_on_submit=False,
+                 number_only=False,
                  **kwargs):
         """
         :type master: ctk.CTkFrame
@@ -23,12 +25,16 @@ class FormInput(ctk.CTkFrame):
         :param btn_text:
         :param warning_text:
         :param warning_callback: callback function that returns a boolean (true if the warning should be displayed)
+        :param allow_empty: if false, the entry can't be empty
+        :param reset_on_submit: if true, the entry will be cleared after the submit
         :param kwargs:
         """
         self.onSubmit = onSubmit
         self.warning_callback = warning_callback
         self.warning_text = warning_text
         self.allow_empty = allow_empty
+        self.reset_on_submit = reset_on_submit
+        self.number_only = number_only
 
         super().__init__(master, **kwargs)
 
@@ -64,9 +70,21 @@ class FormInput(ctk.CTkFrame):
             self.warning_label.configure(text="Empty entry are not allowed !")
             self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
             return
-        if self.warning_callback is not None and self.warning_callback(self.entry.get()):
+
+        if self.number_only and not self.entry.get().isdigit():
+            self.warning_label.configure(text="Only numbers are allowed !")
+            self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
+            self.entry.delete(0, "end")
+            return
+
+        if self.warning_callback is not None and self.warning_callback(
+                self.entry.get() if not self.number_only else int(self.entry.get())):
             self.warning_label.configure(text=self.warning_text)
             self.warning_label.grid(row=0, column=1, pady=10, sticky="sew")
+            self.entry.delete(0, "end")
             return
+
         self.warning_label.configure(text="")
-        self.onSubmit(self.entry.get())
+        self.onSubmit(self.entry.get() if not self.number_only else int(self.entry.get()))
+        if self.reset_on_submit:
+            self.entry.delete(0, "end")

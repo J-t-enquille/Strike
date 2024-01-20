@@ -195,7 +195,6 @@ class App(ctk.CTk):
         self.play_frame.grid_rowconfigure(0, weight=1)
         self.play_frame.grid(row=0, column=0, sticky="nsew")
 
-
         self.partie = Partie()
 
         # create settings frame of play frame
@@ -204,13 +203,14 @@ class App(ctk.CTk):
 
         # create playgame frame of play frame
         class StateGame:
-            def __init__(self, iplayer, activeplayer, activeround,activetrial, remainingpins):
+            def __init__(self, iplayer, activeplayer, activeround, activetrial, remainingpins):
                 self.iplayer = iplayer
                 self.activeplayer = activeplayer
                 self.activeround = activeround
                 self.activetrial = activetrial
                 self.remainingpins = remainingpins
                 self.thirdtrial = False
+
         self.stategame = StateGame(0, "", 0, 1, self.partie.nombre_quilles)
 
         self.playgame_frame = ctk.CTkFrame(self.play_frame, corner_radius=0, fg_color="transparent")
@@ -231,19 +231,14 @@ class App(ctk.CTk):
         self.enterscore_label = ctk.CTkLabel(self.enterscore_frame,
                                              text="Enter first score for ", font=ctk.CTkFont(size=20, weight="bold"))
         self.enterscore_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
-        self.enterscore_entry_frame = ctk.CTkFrame(self.enterscore_frame, corner_radius=0, fg_color="transparent")
-        self.enterscore_entry_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
 
-        self.enterscore_entry = ctk.CTkEntry(self.enterscore_entry_frame, corner_radius=10)
-        self.enterscore_entry.grid(row=0, column=0, padx=20, pady=10)
-        self.enterscore_button = ctk.CTkButton(self.enterscore_entry_frame, corner_radius=10, width=100, height=50,
-                                               text="Validate", font=ctk.CTkFont(size=20, weight="bold"),
-                                               command=self.enterscore)
-        self.enterscore_button.grid(row=0, column=1, padx=20, pady=10)
-        self.enterscore_warning_label = ctk.CTkLabel(self.enterscore_entry_frame, text="",
-                                                     font=ctk.CTkFont(size=20, weight="bold", slant="italic"),
-                                                     text_color="red")
-        self.enterscore_warning_label.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.score_input = FormInput(self.enterscore_frame, onSubmit=self.enterscore,
+                                     placeholder_text="Score", btn_text="Validate",
+                                     warning_callback=self.warning,
+                                     warning_text="Please enter a number between 0 and " + str(
+                                         self.stategame.remainingpins),
+                                     allow_empty=False, reset_on_submit=True, number_only=True)
+        self.score_input.grid(row=1, column=0, padx=20, pady=10, sticky="n")
 
 
         # select default frame
@@ -318,18 +313,19 @@ class App(ctk.CTk):
         self.enterscore_label.configure(
             text="Enter a first score for " + self.stategame.activeplayer)
 
-
-    def enterscore(self):
-        if self.enterscore_entry.get().isdigit() and int(self.enterscore_entry.get()) <= self.stategame.remainingpins:
-            self.enterscore_warning_label.configure(text="")
-            if self.enterscore_entry.get() != "":
-                self.stategame.remainingpins = self.stategame.remainingpins - int(self.enterscore_entry.get())
+    def enterscore(self, score):
+        if score <= self.stategame.remainingpins:
+            if score != "":
+                self.stategame.remainingpins = self.stategame.remainingpins - score
                 if self.stategame.activetrial == 1:
-                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].firsttrial_label.configure(text=self.enterscore_entry.get())
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].firsttrial_label.configure(text=score)
                 elif self.stategame.activetrial == 2:
-                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].secondtrial_label.configure(text=self.enterscore_entry.get())
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].secondtrial_label.configure(text=score)
                 elif self.stategame.activetrial == 3:
-                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].thirdtrial_label.configure(text=self.enterscore_entry.get())
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].thirdtrial_label.configure(text=score)
                 self.partie.addScore(self.stategame.activeplayer, self.stategame.activeround, int(
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].firsttrial_label.cget("text")), int(
@@ -344,22 +340,17 @@ class App(ctk.CTk):
                         text=allscore_currentplayer["tableau"][self.stategame.activeround])
                     self.playerscore_widgets[self.stategame.activeplayer].totalscore_label.configure(
                         text=allscore_currentplayer["total_score"])
-                self.enterscore_entry.delete(0, "end")
                 self.whoplaynext()
-        elif not self.enterscore_entry.get().isdigit():
-            self.enterscore_entry.delete(0, "end")
-            self.enterscore_warning_label.configure(text="Please enter a number")
-        elif int(self.enterscore_entry.get()) > self.partie.nombre_quilles:
-            self.enterscore_entry.delete(0, "end")
-            self.enterscore_warning_label.configure(
-                text="Please enter a number between 0 and " + str(self.stategame.remainingpins))
 
+
+    def warning(self, score):
+        return score > self.stategame.remainingpins
 
     def whoplaynext(self):
         # trial = 2 or strike or spare
         if self.stategame.activetrial == 2 or self.stategame.remainingpins == 0:
             # last round
-            if self.stategame.activeround == self.partie.nombre_tours-1:
+            if self.stategame.activeround == self.partie.nombre_tours - 1:
                 # strike for last round
                 if self.stategame.activetrial ==1 and self.stategame.remainingpins == 0:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[self.stategame.activeround].firsttrial_frame.configure(fg_color="transparent")
