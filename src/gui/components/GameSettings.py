@@ -88,7 +88,7 @@ class GameSettings(ctk.CTkFrame):
             self.partie.addPlayer(Player(playername))
         else:
             self.players_frame.get_player_button(playername).configure(border_width=0)
-            self.partie.scores.remove(playername)
+            self.partie.scores.pop(playername)
 
         if len(self.partie.scores) > 0:
             self.start_game_button.configure(state="normal")
