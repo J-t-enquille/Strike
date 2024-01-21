@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 name,id
 C,1
 m,2
 jm,3
+=======
+name,idC,1m,2jm,3
+>>>>>>> bcbab2ac256cd009c63429fd3158c3c5c5a44f7b
