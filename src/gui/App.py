@@ -187,9 +187,6 @@ class App(ctk.CTk):
             self.partie.setNombreQuille(self.game_settings.get_pins())
         if self.game_settings.get_rounds() != 0:
             self.partie.setNombreTour(self.game_settings.get_rounds())
-        print(self.partie.nombre_quilles)
-        print(self.partie.nombre_tours)
-        print(list(self.partie.scores))
         self.game_frame = GameFrame(self.play_frame, self.partie, self.reset_game_command)
         self.game_settings.destroy()
         self.game_frame.grid(row=0, column=0, sticky="nsew")
