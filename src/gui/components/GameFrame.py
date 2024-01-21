@@ -124,41 +124,9 @@ class GameFrame(ctk.CTkFrame):
                         text=allscore_currentplayer["tableau"][self.stategame.activeround])
                     self.playerscore_widgets[self.stategame.activeplayer].totalscore_label.configure(
                         text=allscore_currentplayer["total_score"])
-                if self.stategame.activeround != self.partie.nombre_tours - 1:
-                    self.display_strike_spare(self.stategame.activeplayer)
+
                 self.whoplaynext()
                 self.remainingpins_label.configure(text="Remaining pins: " + str(self.stategame.remainingpins))
-
-    def display_strike_spare(self,playername):
-        """
-        Display 'X' for a strike and '/' for a spare in the scoretab_frame
-        :return:
-        """
-        if self.stategame.activeround != self.partie.nombre_tours - 1:
-            if self.stategame.remainingpins == 0 and self.stategame.activetrial == 1:
-                self.playerscore_widgets[playername].scorecase_frame_tab[
-                    self.stategame.activeround].firsttrial_label.configure(text="X")
-            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 2:
-                self.playerscore_widgets[playername].scorecase_frame_tab[
-                    self.stategame.activeround].secondtrial_label.configure(text="/")
-        else:
-            if self.stategame.remainingpins == 0 and self.stategame.activetrial == 1:
-                self.playerscore_widgets[playername].scorecase_frame_tab[
-                    self.stategame.activeround].firsttrial_label.configure(text="X")
-            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 2:
-                if not self.stategame.thirdtrial:
-                    self.playerscore_widgets[playername].scorecase_frame_tab[
-                        self.stategame.activeround].secondtrial_label.configure(text="/")
-                else:
-                    self.playerscore_widgets[playername].scorecase_frame_tab[
-                        self.stategame.activeround].secondtrial_label.configure(text="X")
-            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 3:
-                if not self.stategame.thirdtrial:
-                    self.playerscore_widgets[playername].scorecase_frame_tab[
-                        self.stategame.activeround].thirdtrial_label.configure(text="/")
-                else:
-                    self.playerscore_widgets[playername].scorecase_frame_tab[
-                        self.stategame.activeround].thirdtrial_label.configure(text="X")
 
     def warning(self, score):
         return score > self.stategame.remainingpins
@@ -330,7 +298,6 @@ class GameFrame(ctk.CTkFrame):
                 self.partie.scores) - 1:
 
             for player in self.partie.scores:
-                self.display_strike_spare(player)
                 allscore_currentplayer = next(
                     (item for item in self.partie.displayScores() if
                      item["player"] == player),
