@@ -191,10 +191,15 @@ class App(ctk.CTk):
         print(self.partie.nombre_quilles)
         print(self.partie.nombre_tours)
         print(list(self.partie.scores))
-        self.game_frame = GameFrame(self.play_frame, self.partie)
+        self.game_frame = GameFrame(self.play_frame, self.partie, self.reset_game_command)
         self.game_settings.destroy()
         self.game_frame.grid(row=0, column=0, sticky="nsew")
 
+    def reset_game_command(self):
+        self.game_frame.destroy()
+        self.partie = Partie()
+        self.game_settings = GameSettings(self.play_frame, self.partie, start_game=self.start_game)
+        self.game_settings.grid(row=0, column=0, sticky="nsew")
 
     @staticmethod
     def change_appearance_mode_event(new_appearance_mode: str):

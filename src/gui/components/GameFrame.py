@@ -4,10 +4,9 @@ from src.gui.components.FormInput import FormInput
 
 
 class GameFrame(ctk.CTkFrame):
-    def __init__(self, master, partie, **kwargs):
+    def __init__(self, master, partie, reset_command, **kwargs):
         self.partie = partie
         self.stategame = StateGame(0, "", 0, 1, self.partie.nombre_quilles)
-
 
         super().__init__(master, **kwargs)
 
@@ -38,6 +37,10 @@ class GameFrame(ctk.CTkFrame):
                                          self.stategame.remainingpins),
                                      allow_empty=False, reset_on_submit=True, number_only=True)
         self.score_input.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+
+        self.back_btn = ctk.CTkButton(self, corner_radius=10, text="Reset", font=ctk.CTkFont(size=18, weight="bold"),
+                                      command=reset_command)
+        self.back_btn.grid(row=2, column=0, padx=20, pady=10, sticky="n")
 
         self.stategame.activeplayer = list(self.partie.scores)[self.stategame.iplayer]
         self.buildscoretab_frame()
