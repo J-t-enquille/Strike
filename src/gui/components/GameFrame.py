@@ -62,6 +62,9 @@ class GameFrame(ctk.CTkFrame):
             self.stategame.activeround].firsttrial_frame.configure(fg_color="#1f6aa5")
 
     def buildscoretab_frame(self):
+        """
+        Build the scoretab_frame with the game settings (number of rounds, number of pins) and the players
+        """
         self.headertab_frame.grid_columnconfigure(self.partie.nombre_tours + 1, weight=1)
 
         for rounds in range(self.partie.nombre_tours):
@@ -85,6 +88,10 @@ class GameFrame(ctk.CTkFrame):
             text="Enter a first score for " + self.stategame.activeplayer)
 
     def enterscore(self, score):
+        """
+        Enter a score for a player and update the scoretab_frame
+        :param score: int
+        """
         if score <= self.stategame.remainingpins:
             if score != "":
                 self.stategame.remainingpins = self.stategame.remainingpins - score
@@ -105,6 +112,7 @@ class GameFrame(ctk.CTkFrame):
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].thirdtrial_label.cget(
                         "text")) if self.stategame.activetrial == 3 else 0)
+
                 if self.stategame.remainingpins != 0:
                     allscore_currentplayer = next(
                         (item for item in self.partie.displayScores() if item["player"] == self.stategame.activeplayer),
@@ -114,14 +122,50 @@ class GameFrame(ctk.CTkFrame):
                         text=allscore_currentplayer["tableau"][self.stategame.activeround])
                     self.playerscore_widgets[self.stategame.activeplayer].totalscore_label.configure(
                         text=allscore_currentplayer["total_score"])
+                if self.stategame.activeround != self.partie.nombre_tours - 1:
+                    self.display_strike_spare(self.stategame.activeplayer)
                 self.whoplaynext()
                 self.remainingpins_label.configure(text="Remaining pins: " + str(self.stategame.remainingpins))
 
+    def display_strike_spare(self,playername):
+        """
+        Display 'X' for a strike and '/' for a spare in the scoretab_frame
+        :return:
+        """
+        if self.stategame.activeround != self.partie.nombre_tours - 1:
+            if self.stategame.remainingpins == 0 and self.stategame.activetrial == 1:
+                self.playerscore_widgets[playername].scorecase_frame_tab[
+                    self.stategame.activeround].firsttrial_label.configure(text="X")
+            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 2:
+                self.playerscore_widgets[playername].scorecase_frame_tab[
+                    self.stategame.activeround].secondtrial_label.configure(text="/")
+        else:
+            if self.stategame.remainingpins == 0 and self.stategame.activetrial == 1:
+                self.playerscore_widgets[playername].scorecase_frame_tab[
+                    self.stategame.activeround].firsttrial_label.configure(text="X")
+            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 2:
+                if not self.stategame.thirdtrial:
+                    self.playerscore_widgets[playername].scorecase_frame_tab[
+                        self.stategame.activeround].secondtrial_label.configure(text="/")
+                else:
+                    self.playerscore_widgets[playername].scorecase_frame_tab[
+                        self.stategame.activeround].secondtrial_label.configure(text="X")
+            elif self.stategame.remainingpins == 0 and self.stategame.activetrial == 3:
+                if not self.stategame.thirdtrial:
+                    self.playerscore_widgets[playername].scorecase_frame_tab[
+                        self.stategame.activeround].thirdtrial_label.configure(text="/")
+                else:
+                    self.playerscore_widgets[playername].scorecase_frame_tab[
+                        self.stategame.activeround].thirdtrial_label.configure(text="X")
 
     def warning(self, score):
         return score > self.stategame.remainingpins
 
     def whoplaynext(self):
+        """
+        determine who is the next player and the next trial
+        Display the next player and the next trial
+        """
         # trial = 2 or strike or spare
         if self.stategame.activetrial == 2 or self.stategame.remainingpins == 0:
             # last round
@@ -171,6 +215,7 @@ class GameFrame(ctk.CTkFrame):
                         self.stategame.activetrial = 1
                         self.stategame.remainingpins = self.partie.nombre_quilles
                         self.stategame.iplayer += 1
+                        self.stategame.thirdtrial = False
                         # last player
                         if self.stategame.iplayer == len(self.partie.scores):
                             self.stategame.iplayer = 0
@@ -200,6 +245,7 @@ class GameFrame(ctk.CTkFrame):
                             text=allscore_currentplayer["tableau"][round])
                     if not self.endofgame():
                         self.stategame.iplayer += 1
+                        self.stategame.thirdtrial = False
                         # last player
                         if self.stategame.iplayer == len(self.partie.scores):
                             self.stategame.iplayer = 0
@@ -261,6 +307,8 @@ class GameFrame(ctk.CTkFrame):
                 self.stategame.activetrial = 1
                 self.stategame.remainingpins = self.partie.nombre_quilles
                 self.stategame.iplayer += 1
+                self.stategame.thirdtrial = False
+
                 # last player
                 if self.stategame.iplayer == len(self.partie.scores):
                     self.stategame.iplayer = 0
@@ -272,10 +320,15 @@ class GameFrame(ctk.CTkFrame):
                 self.enterscore_label.configure(text="Enter first score for " + self.stategame.activeplayer)
 
     def endofgame(self):
+        """
+        Display the end of the game
+        :return: True if the game is over
+        """
         if self.stategame.activeround == self.partie.nombre_tours - 1 and self.stategame.iplayer == len(
                 self.partie.scores) - 1:
 
             for player in self.partie.scores:
+                self.display_strike_spare(player)
                 allscore_currentplayer = next(
                     (item for item in self.partie.displayScores() if
                      item["player"] == player),
