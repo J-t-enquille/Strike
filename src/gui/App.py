@@ -57,7 +57,7 @@ class App(ctk.CTk):
                                           size=(26, 26))
         self.home_bowling_image = ctk.CTkImage(light_image=Image.open(os.path.join(assets_path, "home_img.png")),
                                                dark_image=Image.open(os.path.join(assets_path, "home_img_dark.png")),
-                                               size=(400, 400))
+                                               size=(500, 500))
         # ---------------------------------------------------------------------------------
         # create sidebar frame
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
