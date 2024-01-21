@@ -88,6 +88,8 @@ class GameFrame(ctk.CTkFrame):
         if score <= self.stategame.remainingpins:
             if score != "":
                 self.stategame.remainingpins = self.stategame.remainingpins - score
+                self.score_input.set_warning_text("Please enter a number between 0 and " + str(
+                                         self.stategame.remainingpins))
                 if self.stategame.activetrial == 1:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].firsttrial_label.configure(text=score)
