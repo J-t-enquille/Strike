@@ -159,7 +159,6 @@ class App(ctk.CTk):
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.profiles_button.configure(fg_color=("gray75", "gray25") if name == "profiles" else "transparent")
         self.play_button.configure(fg_color=("gray75", "gray25") if name == "play" else "transparent")
-        # self.newgame_button.configure(fg_color=("gray75", "gray25") if name == "newgame" else "transparent")
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")

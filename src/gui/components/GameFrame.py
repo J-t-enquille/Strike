@@ -38,6 +38,16 @@ class GameFrame(ctk.CTkFrame):
                                      allow_empty=False, reset_on_submit=True, number_only=True)
         self.score_input.grid(row=1, column=0, padx=20, pady=10, sticky="n")
 
+        self.msg_endofgame_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.enofgame_label = ctk.CTkLabel(self.msg_endofgame_frame, text="End of game",
+                                           font=ctk.CTkFont(size=20, weight="bold"))
+        self.enofgame_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
+        self.congrats_label = ctk.CTkLabel(self.msg_endofgame_frame, text="Congrats to ",
+                                           font=ctk.CTkFont(size=25, weight="bold"), text_color="#1f6aa5")
+        self.congrats_label.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.reset_label = ctk.CTkLabel(self.msg_endofgame_frame, text="Reset to play again",
+                                        font=ctk.CTkFont(size=20, weight="bold"))
+        self.reset_label.grid(row=2, column=0, padx=20, pady=10, sticky="n")
         self.back_btn = ctk.CTkButton(self, corner_radius=10, text="Reset", font=ctk.CTkFont(size=18, weight="bold"),
                                       command=reset_command)
         self.back_btn.grid(row=2, column=0, padx=20, pady=10, sticky="n")
@@ -261,17 +271,13 @@ class GameFrame(ctk.CTkFrame):
         if self.stategame.activeround == self.partie.nombre_tours - 1 and self.stategame.iplayer == len(
                 self.partie.scores) - 1:
             self.enterscore_frame.grid_forget()
+            self.msg_endofgame_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+            winner = list(self.partie.scores)[0]
+            for player in self.partie.scores:
+                if self.partie.scores[player].scoreTotal() > self.partie.scores[winner].scoreTotal():
+                    winner = player
+            self.congrats_label.configure(text="Congrats to " + winner + " !")
             return True
-
-    def displayscore(self):
-        allscore_currentplayer = next(
-            (item for item in self.partie.displayScores() if item["player"] == self.stategame.activeplayer),
-            None)
-        self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
-            self.stategame.activeround].sumscoretrial_label.configure(
-            text=allscore_currentplayer["tableau"][self.stategame.activeround])
-        self.playerscore_widgets[self.stategame.activeplayer].totalscore_label.configure(
-            text=allscore_currentplayer["total_score"])
 
 
 class ScoreCaseFrame:
