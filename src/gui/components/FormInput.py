@@ -88,3 +88,6 @@ class FormInput(ctk.CTkFrame):
         self.onSubmit(self.entry.get() if not self.number_only else int(self.entry.get()))
         if self.reset_on_submit:
             self.entry.delete(0, "end")
+
+    def set_warning_text(self, text):
+        self.warning_text = text
