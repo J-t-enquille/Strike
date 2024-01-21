@@ -21,7 +21,6 @@ def random_color():
     return color_hex
 
 
-
 class App(ctk.CTk):
     def __init__(self):
         ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -93,15 +92,6 @@ class App(ctk.CTk):
                                          image=self.home_image, anchor="w", command=self.home_button_event)
         self.home_button.grid(row=1, column=0, sticky="ew")
 
-        self.profiles_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
-                                             border_spacing=10, text="Profiles",
-                                             font=ctk.CTkFont(size=18),
-                                             fg_color="transparent", text_color=("gray10", "gray90"),
-                                             hover_color=("gray70", "gray30"),
-                                             image=self.profiles_image, anchor="w",
-                                             command=self.profiles_button_event)
-        self.profiles_button.grid(row=2, column=0, sticky="ew")
-
         self.play_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
                                          border_spacing=10, text="Play",
                                          font=ctk.CTkFont(size=18),
@@ -109,7 +99,16 @@ class App(ctk.CTk):
                                          hover_color=("gray70", "gray30"),
                                          image=self.play_image, anchor="w",
                                          command=self.play_button_event)
-        self.play_button.grid(row=3, column=0, sticky="ew")
+        self.play_button.grid(row=2, column=0, sticky="ew")
+
+        self.profiles_button = ctk.CTkButton(self.sidebar_frame, corner_radius=0, height=40,
+                                             border_spacing=10, text="Profiles",
+                                             font=ctk.CTkFont(size=18),
+                                             fg_color="transparent", text_color=("gray10", "gray90"),
+                                             hover_color=("gray70", "gray30"),
+                                             image=self.profiles_image, anchor="w",
+                                             command=self.profiles_button_event)
+        self.profiles_button.grid(row=3, column=0, sticky="ew")
 
         self.appearance_mode_menu = ctk.CTkOptionMenu(self.sidebar_frame,
                                                       values=["System", "Light", "Dark"],

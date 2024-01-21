@@ -20,13 +20,15 @@ class GameFrame(ctk.CTkFrame):
         self.scoretab_frame.grid(row=0, column=0, padx=20, pady=10)
         self.scoretab_frame.grid_rowconfigure(0, weight=1)
         self.scoretab_frame.grid_columnconfigure(1, weight=1)
-        self.headertab_frame = ctk.CTkFrame(self.scoretab_frame, corner_radius=0, fg_color="transparent")
-        self.headertab_frame.grid(row=0, column=0, padx=20, pady=10)
+        # self.headertab_frame = ctk.CTkFrame(self.scoretab_frame, corner_radius=0, fg_color="transparent")
+        # self.headertab_frame.grid(row=0, column=0, padx=20, pady=10, sticky="n")
         self.playerscore_widgets = {}
 
         self.enterscore_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.enterscore_frame.grid(row=1, column=0, padx=20, pady=10, sticky="n")
-        self.remainingpins_label = ctk.CTkLabel(self.enterscore_frame, text="Remaining pins: " + str(self.stategame.remainingpins), font=ctk.CTkFont(size=20, weight="bold"))
+        self.enterscore_frame.grid(row=1, column=0, padx=20, pady=10, sticky="s")
+        self.remainingpins_label = ctk.CTkLabel(self.enterscore_frame,
+                                                text="Remaining pins: " + str(self.stategame.remainingpins),
+                                                font=ctk.CTkFont(size=20, weight="bold"))
         self.remainingpins_label.grid(row=0, column=0, padx=20, pady=10, sticky="n")
         self.enterscore_label = ctk.CTkLabel(self.enterscore_frame,
                                              text="Enter first score for ", font=ctk.CTkFont(size=20, weight="bold"))
@@ -65,22 +67,21 @@ class GameFrame(ctk.CTkFrame):
         """
         Build the scoretab_frame with the game settings (number of rounds, number of pins) and the players
         """
-        self.headertab_frame.grid_columnconfigure(self.partie.nombre_tours + 1, weight=1)
-
-        for rounds in range(self.partie.nombre_tours):
-            self.round_frame = ctk.CTkFrame(self.headertab_frame, corner_radius=0, fg_color="transparent", width=25,
-                                            border_width=1)
-            self.round_frame.grid(row=0, column=rounds + 1, pady=10)
-            self.round_label = ctk.CTkLabel(self.round_frame, text=str(rounds + 1),
-                                            font=ctk.CTkFont(size=20, weight="bold"))
-            self.round_label.grid(row=0, column=0, padx=20, pady=10)
+        # self.headertab_frame.grid_columnconfigure(self.partie.nombre_tours + 1, weight=1)
+        # for rounds in range(self.partie.nombre_tours):
+        #     self.round_frame = ctk.CTkFrame(self.headertab_frame, corner_radius=0, fg_color="transparent", width=25,
+        #                                     border_width=1)
+        #     self.round_frame.grid(row=0, column=rounds + 1, pady=10, sticky='sew')
+        #     self.round_label = ctk.CTkLabel(self.round_frame, text=str(rounds + 1),
+        #                                     font=ctk.CTkFont(size=20, weight="bold"))
+        #     self.round_label.grid(row=0, column=0, padx=20, pady=10)
         cpt = 0
         for player in self.partie.scores:
             self.playerscore_widgets[player] = PlayerInfoWidgets(player, self.partie.nombre_tours, self.scoretab_frame)
 
-            self.playerscore_widgets[player].playerscore_frame.grid(row=cpt + 1,
-                                                                    column=0, padx=20,
-                                                                    pady=10)
+            self.playerscore_widgets[player].playerscore_frame.grid(row=cpt,
+                                                                    column=0, padx=10,
+                                                                    pady=10, sticky="new")
             self.playerscore_widgets[player].playerscore_frame.grid_columnconfigure(
                 self.partie.nombre_tours + 2, weight=1)
             cpt += 1
@@ -94,26 +95,65 @@ class GameFrame(ctk.CTkFrame):
         """
         if score <= self.stategame.remainingpins:
             if score != "":
+                remainingpins = self.stategame.remainingpins
                 self.stategame.remainingpins = self.stategame.remainingpins - score
                 self.score_input.set_warning_text("Please enter a number between 0 and " + str(
-                                         self.stategame.remainingpins))
+                    self.stategame.remainingpins))
+                score_1 = 0
+                score_2 = 0
+                score_3 = 0
                 if self.stategame.activetrial == 1:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].firsttrial_label.configure(text=score)
+                    score_1 = score
                 elif self.stategame.activetrial == 2:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].secondtrial_label.configure(text=score)
+                    score_1 = self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                                      self.stategame.activeround].firsttrial_label.cget("text")
+                    score_2 = score
                 elif self.stategame.activetrial == 3:
+                    score_1 = self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].firsttrial_label.cget("text")
+                    score_2 = self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].secondtrial_label.cget("text")
+                    score_3 = score if self.stategame.activetrial == 3 else 0
+
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                         self.stategame.activeround].thirdtrial_label.configure(text=score)
-                self.partie.addScore(self.stategame.activeplayer, self.stategame.activeround, int(
+                # Convert X and / to number
+                if score_1 == 'X':
+                    score_1 = self.partie.nombre_quilles
+                if score_2 == 'X':
+                    score_2 = self.partie.nombre_quilles
+                elif score_2 == '/':
+                    score_2 = self.partie.nombre_quilles - int(score_1)
+                if score_3 == 'X':
+                    score_3 = self.partie.nombre_quilles
+                self.partie.addScore(self.stategame.activeplayer, self.stategame.activeround, int(score_1),
+                                     int(score_2), int(score_3))
+                # Strike or spare -> display X or /
+                if score == remainingpins and self.stategame.activetrial == 2:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
-                        self.stategame.activeround].firsttrial_label.cget("text")), int(
+                        self.stategame.activeround].secondtrial_label.configure(text="/")
+                if score == self.partie.nombre_quilles and self.stategame.activeround != self.partie.nombre_tours - 1:
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
-                        self.stategame.activeround].secondtrial_label.cget("text")), int(
+                        self.stategame.activeround].secondtrial_label.configure(text="X")
                     self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
-                        self.stategame.activeround].thirdtrial_label.cget(
-                        "text")) if self.stategame.activetrial == 3 else 0)
+                        self.stategame.activeround].firsttrial_label.configure(text=" ")
+                # handle last round strike display
+                elif (score == self.partie.nombre_quilles and self.stategame.activeround == self.partie.nombre_tours - 1
+                      and self.stategame.activetrial == 1):
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].firsttrial_label.configure(text="X")
+                elif (score == self.partie.nombre_quilles and self.stategame.activeround == self.partie.nombre_tours - 1
+                      and self.stategame.activetrial == 2):
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].secondtrial_label.configure(text="X")
+                elif (score == self.partie.nombre_quilles and self.stategame.activeround == self.partie.nombre_tours - 1
+                      and self.stategame.activetrial == 3):
+                    self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
+                        self.stategame.activeround].thirdtrial_label.configure(text="X")
 
                 if self.stategame.remainingpins != 0:
                     allscore_currentplayer = next(
@@ -127,6 +167,7 @@ class GameFrame(ctk.CTkFrame):
 
                 self.whoplaynext()
                 self.remainingpins_label.configure(text="Remaining pins: " + str(self.stategame.remainingpins))
+
 
     def warning(self, score):
         return score > self.stategame.remainingpins
@@ -177,7 +218,7 @@ class GameFrame(ctk.CTkFrame):
                         (item for item in self.partie.displayScores() if
                          item["player"] == self.stategame.activeplayer),
                         None)
-                    for round in range(self.stategame.activeround+1):
+                    for round in range(self.stategame.activeround + 1):
                         self.playerscore_widgets[self.stategame.activeplayer].scorecase_frame_tab[
                             round].sumscoretrial_label.configure(
                             text=allscore_currentplayer["tableau"][round])
